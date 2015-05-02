@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>tinybot</title>
+    <description></description>
+    <link>http://yourdomain.com/</link>
+    <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Sat, 02 May 2015 08:23:20 -0500</pubDate>
+    <lastBuildDate>Sat, 02 May 2015 08:23:20 -0500</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>Introduction to *Nix: Part 1</title>
+        <description>&lt;p&gt;This tutorial (Introduction to *Nix: Part 1) is for those who are new to Linux, or those who want to review their understanding of fundamental Linux concepts and commands. For beginners, a lot of this material will be new. For more experienced users you can use this as a refresher or jump ahead to &lt;a href=&quot;&quot;&gt;Part 2&lt;/a&gt; or &lt;a href=&quot;&quot;&gt;Part 3&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Why does this say *nix? Well I am not going to go down the rabbit hole of the Unix vs Linux discussion so a quick explanation of both:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Unix: a family of multitasking, multiuser computer operating systems that derive from the original AT&amp;amp;T Unix, developed in the 1970s at the Bell Labs research center by Ken Thompson, Dennis Ritchie, and others&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Linux: a Unix-like and mostly POSIX-compliant computer operating system assembled under the model of free and open-source software development and distribution [whose] defining component … is the Linux kernel, an operating system kernel first released [in] 1991 by Linus Torvalds ↑&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;basic-shell-commands&quot;&gt;Basic shell commands&lt;/h3&gt;
+
+&lt;p&gt;While I could list a few dozen commands that I use everyday I think I’ll keep this intro section to the top 20 or so most useful for beginners or people looking to refresh their shell-fu. Here are the commands we will be looking at in this section:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;#pwd&quot;&gt;pwd&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ls&quot;&gt;ls&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#cd&quot;&gt;cd&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#mkdir&quot;&gt;mkdir&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#echo&quot;&gt;echo&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#cat&quot;&gt;cat&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#mv&quot;&gt;mv&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#cp&quot;&gt;cp&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#rm&quot;&gt;rm&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#man&quot;&gt;man&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#less&quot;&gt;less&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#more&quot;&gt;more&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#head&quot;&gt;head&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#tail&quot;&gt;tail&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#grep&quot;&gt;grep&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#which&quot;&gt;which&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#history&quot;&gt;history&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#chown&quot;&gt;chown&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#chmod&quot;&gt;chmod&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#find&quot;&gt;find&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#locate&quot;&gt;locate&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#clear&quot;&gt;clear&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;pwd&quot;&gt;pwd&lt;/h3&gt;
+&lt;p&gt;To see bash’s current working directory, you can type &lt;code&gt;pwd&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ryan@bebop &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;homebase&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;master&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;pwd&lt;/span&gt;
+/home/ryan/homebase
+
+tinybot± &lt;span class=&quot;nb&quot;&gt;pwd&lt;/span&gt;
+/home/ryan/tinybot&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;absolute-path&quot;&gt;Absolute Path&lt;/h4&gt;
+
+&lt;h4 id=&quot;relative-path&quot;&gt;Relative Path&lt;/h4&gt;
+
+&lt;h3 id=&quot;ls&quot;&gt;ls&lt;/h3&gt;
+
+&lt;h3 id=&quot;cd&quot;&gt;cd&lt;/h3&gt;
+
+&lt;h3 id=&quot;mkdir&quot;&gt;mkdir&lt;/h3&gt;
+
+&lt;h3 id=&quot;echo&quot;&gt;echo&lt;/h3&gt;
+
+&lt;h3 id=&quot;cat&quot;&gt;cat&lt;/h3&gt;
+
+&lt;h3 id=&quot;mv&quot;&gt;mv&lt;/h3&gt;
+
+&lt;h3 id=&quot;cp&quot;&gt;cp&lt;/h3&gt;
+
+&lt;h3 id=&quot;rm&quot;&gt;rm&lt;/h3&gt;
+
+&lt;h3 id=&quot;man&quot;&gt;man&lt;/h3&gt;
+
+&lt;h3 id=&quot;less&quot;&gt;less&lt;/h3&gt;
+
+&lt;h3 id=&quot;more&quot;&gt;more&lt;/h3&gt;
+
+&lt;h3 id=&quot;head&quot;&gt;head&lt;/h3&gt;
+
+&lt;h3 id=&quot;tail&quot;&gt;tail&lt;/h3&gt;
+
+&lt;h3 id=&quot;grep&quot;&gt;grep&lt;/h3&gt;
+
+&lt;h3 id=&quot;which&quot;&gt;which&lt;/h3&gt;
+
+&lt;h3 id=&quot;history&quot;&gt;history&lt;/h3&gt;
+
+&lt;h3 id=&quot;chown&quot;&gt;chown&lt;/h3&gt;
+
+&lt;h3 id=&quot;chmod&quot;&gt;chmod&lt;/h3&gt;
+
+&lt;h3 id=&quot;find&quot;&gt;find&lt;/h3&gt;
+
+&lt;h3 id=&quot;locate&quot;&gt;locate&lt;/h3&gt;
+
+&lt;h3 id=&quot;clear&quot;&gt;clear&lt;/h3&gt;
+</description>
+        <pubDate>Fri, 01 May 2015 04:49:55 -0500</pubDate>
+        <link>http://yourdomain.com/jekyll/update/2015/05/01/intro-to-nix.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/jekyll/update/2015/05/01/intro-to-nix.html</guid>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
+    
+  </channel>
+</rss>

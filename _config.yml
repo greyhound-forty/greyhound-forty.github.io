@@ -1,0 +1,12 @@
+# Site settings
+title: tinybot
+email: ryantiffany@gmail.com
+description: > # this means to ignore newlines until "baseurl:"
+  
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://yourdomain.com" # the base hostname & protocol for your site
+twitter_username: ryantiffany
+github_username:  greyhound-forty
+
+# Build settings
+markdown: kramdown
