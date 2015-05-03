@@ -39,6 +39,8 @@ While I could list a few dozen commands that I use everyday I think I'll keep th
 + [find](#find)
 + [locate](#locate)
 + [clear](#clear)
++ [stat](#stat)
++ [file](#file)
 
 ### pwd
 To see bash's current working directory, you can type `pwd`
@@ -53,7 +55,10 @@ tinybot± pwd
 
 #### Absolute Path
 
+
+
 #### Relative Path
+
 
 ### ls
 
