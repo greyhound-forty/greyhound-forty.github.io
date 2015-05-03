@@ -57,7 +57,7 @@ If you are new to Github, here is a guide on creating a new Repository: [Create 
 After we've set up our new repo we'll head back to our local system and clone our newly created repo:
 
 	rm -rf ~/testing-site
-    git clone git@github.com:greyhound-forty/ballin-octo-batman.git ~/testing-site
+    git clone git@github.com:inchhighassassins/psychic-bugfixes.git ~/testing-site
 	cd ~/testing-site
 
 Now since we are publishing to Github pages we need to switch to a gh-pages branch and remove any files that were present in the repo:
@@ -80,11 +80,12 @@ Create a new page and push to Github:
 
 Now we will edit the configuration file with our Github repository details. You have the option of adding a line for a specific branch you want to publish to but Hexo can figure this out automatically so I am leaving it out. From my experience if you are deploying to a main Github page (i.e. youruser.github.io) then you can leave this blank. If you are pushing to a child page like http://youruser.github.io/blog then it is best to to add the line `branch: gh-pages` under the repository section.
 
-
-	deploy:
-  	 type: git  
-  	 repository: git@github.com:inchhighassassins/psychic-bugfixes.git  
-     branch: gh-pages  
+{% highlight bash %}
+deploy:
+   type: git  
+   repository: git@github.com:inchhighassassins/psychic-bugfixes.git  
+   branch: gh-pages  
+{% endhighlight %}
 	  
 Now generate and deploy
 
