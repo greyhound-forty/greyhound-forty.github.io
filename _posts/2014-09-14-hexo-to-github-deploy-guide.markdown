@@ -79,11 +79,10 @@ Create a new page and push to Github:
 
 Now we will edit the configuration file with our Github repository details. You have the option of adding a line for a specific branch you want to publish to but Hexo can figure this out automatically so I am leaving it out. From my experience if you are deploying to a main Github page (i.e. youruser.github.io) then you can leave this blank. If you are pushing to a child page like http://youruser.github.io/blog then it is best to to add the line `branch: gh-pages` under the repository section.
 
-```
-deploy:
-  type: github
-  repository: git@github.com:greyhound-forty/fuzzy-octo-meme.git
-```
+
+	deploy:
+  		type: github
+  		repository: git@github.com:greyhound-forty/fuzzy-octo-meme.git
 
 Now generate and deploy
 
@@ -92,7 +91,7 @@ Now generate and deploy
 
 If we've set up everything correctly the output should look something like this:
 
-```
+{ %highlight bash }
 ryan@ghost ~/testing-site [gh-pages *] % hexo generate
 [info] Files loaded in 0.136s
 [create] Generated: archives/index.html (74ms)
@@ -172,7 +171,7 @@ To git@github.com:greyhound-forty/ballin-octo-batman.git
  + e6fe5eb...b1df09b gh-pages -> gh-pages (forced update)
 Branch gh-pages set up to track remote branch gh-pages from git@github.com:greyhound-forty/ballin-octo-batman.git.
 [info] Deploy done: github
-```
+{% endhighlight %}
 
 It takes about 10 minutes for Github Pages sites to show up, but you can see my test page [here](http://greyhound-forty.github.io/ballin-octo-batman).
 
