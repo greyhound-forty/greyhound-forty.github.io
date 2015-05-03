@@ -91,7 +91,7 @@ Now generate and deploy
 
 If we've set up everything correctly the output should look something like this:
 
-{ %highlight bash }
+{% highlight bash %}
 ryan@ghost ~/testing-site [gh-pages *] % hexo generate
 [info] Files loaded in 0.136s
 [create] Generated: archives/index.html (74ms)
