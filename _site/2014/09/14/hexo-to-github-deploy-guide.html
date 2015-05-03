@@ -66,10 +66,24 @@
 
 <h3 id="first-install-nvm-and-npm">First install NVM and npm</h3>
 
-<p>Our first step is to actually install node.js, but we are going to be using <a href="https://github.com/creationix/nvm">NVM</a> to help us avoid permissions issues with a default install of node. For this guide we are installing node v0.10.29:</p>
+<p>Our first step is to actually install node.js. For this we have a few different methods we can choose from. We can use <a href="https://github.com/creationix/nvm">NVM</a> or a PPA maintained by nodesource:</p>
 
-<pre><code>curl https://raw.githubusercontent.com/creationix/nvm/v0.11.1/install.sh | bash
+<h4 id="nvm-install">NVM Install</h4>
+<p>The version number may be different, so be sure to check the <a href="https://github.com/creationix/nvm">NVM Github page</a> for the most up to date install script:</p>
+
+<pre><code>curl https://raw.githubusercontent.com/creationix/nvm/v0.16.1/install.sh | sh
 nvm install 0.10.29
+</code></pre>
+
+<h4 id="ppa-install">PPA Install</h4>
+<p>This will probably have more up-to-date versions of Node.js than the official Ubuntu repositories. First, you need to install the PPA in order to get access to its contents:</p>
+
+<pre><code>curl -sL https://deb.nodesource.com/setup | sudo bash -
+</code></pre>
+
+<p>The PPA will be added to your system and an <code>apt-get update</code> will be run automatically. You can then install nodejs using the command:</p>
+
+<pre><code>sudo apt-get install nodejs
 </code></pre>
 
 <p>Let’s check our installed version:</p>
@@ -132,11 +146,10 @@ git push origin gh-pages
 
 <p>Now we will edit the configuration file with our Github repository details. You have the option of adding a line for a specific branch you want to publish to but Hexo can figure this out automatically so I am leaving it out. From my experience if you are deploying to a main Github page (i.e. youruser.github.io) then you can leave this blank. If you are pushing to a child page like http://youruser.github.io/blog then it is best to to add the line <code>branch: gh-pages</code> under the repository section.</p>
 
-<p><code>
-deploy:
-  type: github
-  repository: git@github.com:greyhound-forty/fuzzy-octo-meme.git
-</code></p>
+<pre><code>deploy:
+  		type: github
+  		repository: git@github.com:greyhound-forty/fuzzy-octo-meme.git
+</code></pre>
 
 <p>Now generate and deploy</p>
 
@@ -146,87 +159,85 @@ hexo deploy
 
 <p>If we’ve set up everything correctly the output should look something like this:</p>
 
-<p>```
-ryan@ghost ~/testing-site [gh-pages *] % hexo generate
-[info] Files loaded in 0.136s
-[create] Generated: archives/index.html (74ms)
-[create] Generated: archives/2014/index.html (21ms)
-[create] Generated: archives/2014/08/index.html (15ms)
-[create] Generated: index.html (13ms)
-[create] Generated: 2014/08/25/testing-deploy/index.html (13ms)
-[create] Generated: 2014/08/25/hello-world/index.html (18ms)
-[create] Generated: js/script.js (2ms)
-[create] Generated: css/style.css (691ms)
-[create] Generated: css/fonts/FontAwesome.otf (2ms)
-[create] Generated: css/fonts/fontawesome-webfont.eot (1ms)
-[create] Generated: css/fonts/fontawesome-webfont.svg (1ms)
-[create] Generated: css/fonts/fontawesome-webfont.ttf (1ms)
-[create] Generated: css/fonts/fontawesome-webfont.woff (1ms)
-[create] Generated: css/images/banner.jpg (2ms)
-[create] Generated: fancybox/blank.gif (1ms)
-[create] Generated: fancybox/fancybox_loading.gif (1ms)
-[create] Generated: fancybox/fancybox_loading@2x.gif (1ms)
-[create] Generated: fancybox/fancybox_overlay.png (1ms)
-[create] Generated: fancybox/fancybox_sprite.png (1ms)
-[create] Generated: fancybox/fancybox_sprite@2x.png (1ms)
-[create] Generated: fancybox/jquery.fancybox.css (1ms)
-[create] Generated: fancybox/jquery.fancybox.js (1ms)
-[create] Generated: fancybox/jquery.fancybox.pack.js (1ms)
-[create] Generated: fancybox/helpers/fancybox_buttons.png (1ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-buttons.css (1ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-buttons.js (1ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-media.js (2ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-thumbs.css (0ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-thumbs.js (0ms)
-[info] 29 files generated in 0.884s</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">ryan@ghost ~/testing-site <span class="o">[</span>gh-pages *<span class="o">]</span> % hexo generate
+<span class="o">[</span>info<span class="o">]</span> Files loaded in 0.136s
+<span class="o">[</span>create<span class="o">]</span> Generated: archives/index.html <span class="o">(</span>74ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: archives/2014/index.html <span class="o">(</span>21ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: archives/2014/08/index.html <span class="o">(</span>15ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: index.html <span class="o">(</span>13ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: 2014/08/25/testing-deploy/index.html <span class="o">(</span>13ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: 2014/08/25/hello-world/index.html <span class="o">(</span>18ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: js/script.js <span class="o">(</span>2ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: css/style.css <span class="o">(</span>691ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/FontAwesome.otf <span class="o">(</span>2ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/fontawesome-webfont.eot <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/fontawesome-webfont.svg <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/fontawesome-webfont.ttf <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/fontawesome-webfont.woff <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: css/images/banner.jpg <span class="o">(</span>2ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/blank.gif <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_loading.gif <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_loading@2x.gif <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_overlay.png <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_sprite.png <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_sprite@2x.png <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/jquery.fancybox.css <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/jquery.fancybox.js <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/jquery.fancybox.pack.js <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/fancybox_buttons.png <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-buttons.css <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-buttons.js <span class="o">(</span>1ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-media.js <span class="o">(</span>2ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-thumbs.css <span class="o">(</span>0ms<span class="o">)</span>
+<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-thumbs.js <span class="o">(</span>0ms<span class="o">)</span>
+<span class="o">[</span>info<span class="o">]</span> <span class="m">29</span> files generated in 0.884s
 
-<p>ryan@ghost ~/testing-site [gh-pages *] % hexo deploy
-[info] Start deploying: github
-[info] Setting up GitHub deployment…
+ryan@ghost ~/testing-site <span class="o">[</span>gh-pages *<span class="o">]</span> % hexo deploy
+<span class="o">[</span>info<span class="o">]</span> Start deploying: github
+<span class="o">[</span>info<span class="o">]</span> Setting up GitHub deployment...
 Initialized empty Git repository in /home/ryan/testing-site/.deploy/.git/
-[master (root-commit) b62505d] First commit
- 1 file changed, 0 insertions(+), 0 deletions(-)
- create mode 100644 placeholder
-[info] Clearing .deploy folder…
-[info] Copying files from public folder…
-[gh-pages b1df09b] Site updated: 2014-08-26 00:00:55
- 30 files changed, 6207 insertions(+)
- create mode 100644 2014/08/25/hello-world/index.html
- create mode 100644 2014/08/25/testing-deploy/index.html
- create mode 100644 archives/2014/08/index.html
- create mode 100644 archives/2014/index.html
- create mode 100644 archives/index.html
- create mode 100644 css/fonts/FontAwesome.otf
- create mode 100644 css/fonts/fontawesome-webfont.eot
- create mode 100644 css/fonts/fontawesome-webfont.svg
- create mode 100644 css/fonts/fontawesome-webfont.ttf
- create mode 100644 css/fonts/fontawesome-webfont.woff
- create mode 100644 css/images/banner.jpg
- create mode 100644 css/style.css
- create mode 100644 fancybox/blank.gif
- create mode 100644 fancybox/fancybox_loading.gif
- create mode 100644 fancybox/fancybox_loading@2x.gif
- create mode 100644 fancybox/fancybox_overlay.png
- create mode 100644 fancybox/fancybox_sprite.png
- create mode 100644 fancybox/fancybox_sprite@2x.png
- create mode 100644 fancybox/helpers/fancybox_buttons.png
- create mode 100644 fancybox/helpers/jquery.fancybox-buttons.css
- create mode 100644 fancybox/helpers/jquery.fancybox-buttons.js
- create mode 100644 fancybox/helpers/jquery.fancybox-media.js
- create mode 100644 fancybox/helpers/jquery.fancybox-thumbs.css
- create mode 100644 fancybox/helpers/jquery.fancybox-thumbs.js
- create mode 100644 fancybox/jquery.fancybox.css
- create mode 100644 fancybox/jquery.fancybox.js
- create mode 100644 fancybox/jquery.fancybox.pack.js
- create mode 100644 index.html
- create mode 100644 js/script.js
- delete mode 100644 placeholder
-Warning: Permanently added the RSA host key for IP address ‘x.x.x.x’ to the list of known hosts.
+<span class="o">[</span>master <span class="o">(</span>root-commit<span class="o">)</span> b62505d<span class="o">]</span> First commit
+ <span class="m">1</span> file changed, <span class="m">0</span> insertions<span class="o">(</span>+<span class="o">)</span>, <span class="m">0</span> deletions<span class="o">(</span>-<span class="o">)</span>
+ create mode <span class="m">100644</span> placeholder
+<span class="o">[</span>info<span class="o">]</span> Clearing .deploy folder...
+<span class="o">[</span>info<span class="o">]</span> Copying files from public folder...
+<span class="o">[</span>gh-pages b1df09b<span class="o">]</span> Site updated: 2014-08-26 00:00:55
+ <span class="m">30</span> files changed, <span class="m">6207</span> insertions<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> 2014/08/25/hello-world/index.html
+ create mode <span class="m">100644</span> 2014/08/25/testing-deploy/index.html
+ create mode <span class="m">100644</span> archives/2014/08/index.html
+ create mode <span class="m">100644</span> archives/2014/index.html
+ create mode <span class="m">100644</span> archives/index.html
+ create mode <span class="m">100644</span> css/fonts/FontAwesome.otf
+ create mode <span class="m">100644</span> css/fonts/fontawesome-webfont.eot
+ create mode <span class="m">100644</span> css/fonts/fontawesome-webfont.svg
+ create mode <span class="m">100644</span> css/fonts/fontawesome-webfont.ttf
+ create mode <span class="m">100644</span> css/fonts/fontawesome-webfont.woff
+ create mode <span class="m">100644</span> css/images/banner.jpg
+ create mode <span class="m">100644</span> css/style.css
+ create mode <span class="m">100644</span> fancybox/blank.gif
+ create mode <span class="m">100644</span> fancybox/fancybox_loading.gif
+ create mode <span class="m">100644</span> fancybox/fancybox_loading@2x.gif
+ create mode <span class="m">100644</span> fancybox/fancybox_overlay.png
+ create mode <span class="m">100644</span> fancybox/fancybox_sprite.png
+ create mode <span class="m">100644</span> fancybox/fancybox_sprite@2x.png
+ create mode <span class="m">100644</span> fancybox/helpers/fancybox_buttons.png
+ create mode <span class="m">100644</span> fancybox/helpers/jquery.fancybox-buttons.css
+ create mode <span class="m">100644</span> fancybox/helpers/jquery.fancybox-buttons.js
+ create mode <span class="m">100644</span> fancybox/helpers/jquery.fancybox-media.js
+ create mode <span class="m">100644</span> fancybox/helpers/jquery.fancybox-thumbs.css
+ create mode <span class="m">100644</span> fancybox/helpers/jquery.fancybox-thumbs.js
+ create mode <span class="m">100644</span> fancybox/jquery.fancybox.css
+ create mode <span class="m">100644</span> fancybox/jquery.fancybox.js
+ create mode <span class="m">100644</span> fancybox/jquery.fancybox.pack.js
+ create mode <span class="m">100644</span> index.html
+ create mode <span class="m">100644</span> js/script.js
+ delete mode <span class="m">100644</span> placeholder
+Warning: Permanently added the RSA host key <span class="k">for</span> IP address <span class="s1">&#39;x.x.x.x&#39;</span> to the list of known hosts.
 To git@github.com:greyhound-forty/ballin-octo-batman.git
- + e6fe5eb…b1df09b gh-pages -&gt; gh-pages (forced update)
-Branch gh-pages set up to track remote branch gh-pages from git@github.com:greyhound-forty/ballin-octo-batman.git.
-[info] Deploy done: github
-```</p>
+ + e6fe5eb...b1df09b gh-pages -&gt; gh-pages <span class="o">(</span>forced update<span class="o">)</span>
+Branch gh-pages <span class="nb">set </span>up to track remote branch gh-pages from git@github.com:greyhound-forty/ballin-octo-batman.git.
+<span class="o">[</span>info<span class="o">]</span> Deploy <span class="k">done</span>: github</code></pre></div>
 
 <p>It takes about 10 minutes for Github Pages sites to show up, but you can see my test page <a href="http://greyhound-forty.github.io/ballin-octo-batman">here</a>.</p>
 
