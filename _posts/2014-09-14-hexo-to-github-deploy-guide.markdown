@@ -69,6 +69,7 @@ Let's go ahead and initialize a new hexo setup in the current directory and make
 
 	hexo init .
 	npm install
+	npm install hexo-deployer-git --save
 
 Create a new page and push to Github:
 
@@ -81,65 +82,35 @@ Now we will edit the configuration file with our Github repository details. You 
 
 
 	deploy:
-  		type: github
-  		repository: git@github.com:greyhound-forty/fuzzy-octo-meme.git
-
+  	 type: git  
+  	 repository: git@github.com:inchhighassassins/psychic-bugfixes.git  
+     branch: gh-pages  
+	  
 Now generate and deploy
 
 	hexo generate
-	hexo deploy
+	hexo d
 
 If we've set up everything correctly the output should look something like this:
 
 {% highlight bash %}
-ryan@ghost ~/testing-site [gh-pages *] % hexo generate
-[info] Files loaded in 0.136s
-[create] Generated: archives/index.html (74ms)
-[create] Generated: archives/2014/index.html (21ms)
-[create] Generated: archives/2014/08/index.html (15ms)
-[create] Generated: index.html (13ms)
-[create] Generated: 2014/08/25/testing-deploy/index.html (13ms)
-[create] Generated: 2014/08/25/hello-world/index.html (18ms)
-[create] Generated: js/script.js (2ms)
-[create] Generated: css/style.css (691ms)
-[create] Generated: css/fonts/FontAwesome.otf (2ms)
-[create] Generated: css/fonts/fontawesome-webfont.eot (1ms)
-[create] Generated: css/fonts/fontawesome-webfont.svg (1ms)
-[create] Generated: css/fonts/fontawesome-webfont.ttf (1ms)
-[create] Generated: css/fonts/fontawesome-webfont.woff (1ms)
-[create] Generated: css/images/banner.jpg (2ms)
-[create] Generated: fancybox/blank.gif (1ms)
-[create] Generated: fancybox/fancybox_loading.gif (1ms)
-[create] Generated: fancybox/fancybox_loading@2x.gif (1ms)
-[create] Generated: fancybox/fancybox_overlay.png (1ms)
-[create] Generated: fancybox/fancybox_sprite.png (1ms)
-[create] Generated: fancybox/fancybox_sprite@2x.png (1ms)
-[create] Generated: fancybox/jquery.fancybox.css (1ms)
-[create] Generated: fancybox/jquery.fancybox.js (1ms)
-[create] Generated: fancybox/jquery.fancybox.pack.js (1ms)
-[create] Generated: fancybox/helpers/fancybox_buttons.png (1ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-buttons.css (1ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-buttons.js (1ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-media.js (2ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-thumbs.css (0ms)
-[create] Generated: fancybox/helpers/jquery.fancybox-thumbs.js (0ms)
-[info] 29 files generated in 0.884s
+ryan@neptune|~/psychic-bugfixes on gh-pages
+± hexo d
 
-ryan@ghost ~/testing-site [gh-pages *] % hexo deploy
-[info] Start deploying: github
-[info] Setting up GitHub deployment...
-Initialized empty Git repository in /home/ryan/testing-site/.deploy/.git/
-[master (root-commit) b62505d] First commit
+INFO  Deploying: git
+INFO  Setting up Git deployment...
+Initialized empty Git repository in /home/ryan/psychic-bugfixes/.deploy_git/.git/
+[master (root-commit) d3f86e9] First commit
  1 file changed, 0 insertions(+), 0 deletions(-)
  create mode 100644 placeholder
-[info] Clearing .deploy folder...
-[info] Copying files from public folder...
-[gh-pages b1df09b] Site updated: 2014-08-26 00:00:55
- 30 files changed, 6207 insertions(+)
- create mode 100644 2014/08/25/hello-world/index.html
- create mode 100644 2014/08/25/testing-deploy/index.html
- create mode 100644 archives/2014/08/index.html
- create mode 100644 archives/2014/index.html
+INFO  Clearing .deploy folder...
+INFO  Copying files from public folder...
+[master 9c897d8] Site updated: 2015-05-03 16:34:38
+ 30 files changed, 6050 insertions(+)
+ create mode 100644 2015/05/03/Testing-Deploy/index.html
+ create mode 100644 2015/05/03/hello-world/index.html
+ create mode 100644 archives/2015/05/index.html
+ create mode 100644 archives/2015/index.html
  create mode 100644 archives/index.html
  create mode 100644 css/fonts/FontAwesome.otf
  create mode 100644 css/fonts/fontawesome-webfont.eot
@@ -166,21 +137,19 @@ Initialized empty Git repository in /home/ryan/testing-site/.deploy/.git/
  create mode 100644 index.html
  create mode 100644 js/script.js
  delete mode 100644 placeholder
-Warning: Permanently added the RSA host key for IP address 'x.x.x.x' to the list of known hosts.
-To git@github.com:greyhound-forty/ballin-octo-batman.git
- + e6fe5eb...b1df09b gh-pages -> gh-pages (forced update)
-Branch gh-pages set up to track remote branch gh-pages from git@github.com:greyhound-forty/ballin-octo-batman.git.
-[info] Deploy done: github
+To git@github.com:inchhighassassins/psychic-bugfixes.git
+ + 1ddef9d...9c897d8 master -> gh-pages (forced update)
+Branch master set up to track remote branch gh-pages from git@github.com:inchhighassassins/psychic-bugfixes.git.
+INFO  Deploy done: git
 {% endhighlight %}
 
-It takes about 10 minutes for Github Pages sites to show up, but you can see my test page [here](http://greyhound-forty.github.io/ballin-octo-batman).
+It takes about 10 minutes for Github Pages sites to show up, but you can see my test page [here](https://inchhighassassins.github.io/psychic-bugfixes/).
 
 ### Clean up
 Remove .deploy folder.
 
-{% highlight bash %}
 	rm -rf .deploy
-{% endhighlight %}
+
 
 ### Custom Domain
 
