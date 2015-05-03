@@ -8,18 +8,27 @@ Today we're going to look at deploying [Hexo](http://hexo.io/) via Github Pages.
 
 ### First install NVM and npm
 
-Our first step is to actually install node.js, but we are going to be using [NVM](https://github.com/creationix/nvm) to help us avoid permissions issues with a default install of node. For this guide we are installing node v0.10.29:
+Our first step is to actually install node.js. For this we have a few different methods we can choose from. We can use [NVM](https://github.com/creationix/nvm) or a PPA maintained by nodesource:
 
-	curl https://raw.githubusercontent.com/creationix/nvm/v0.11.1/install.sh | bash
+#### NVM Install
+The version number may be different, so be sure to check the [NVM Github page](https://github.com/creationix/nvm) for the most up to date install script:
+
+	curl https://raw.githubusercontent.com/creationix/nvm/v0.16.1/install.sh | sh
 	nvm install 0.10.29
 
+#### PPA Install
+This will probably have more up-to-date versions of Node.js than the official Ubuntu repositories. First, you need to install the PPA in order to get access to its contents:
+
+	curl -sL https://deb.nodesource.com/setup | sudo bash -
+	
+The PPA will be added to your system and an `apt-get update` will be run automatically. You can then install nodejs using the command:
+
+	sudo apt-get install nodejs
 
 Let's check our installed version:
 
     » node -v
 	v0.10.29
-
-
 
 Now we will install hexo using NPM:
 
