@@ -88,16 +88,14 @@ basicAuth:
 
 After we make this change we also need to uncomment the basicAuth plugin line in the default.yaml
 
+	[hyperion ~ ] $ grep 'plugins/basicAuth' /var/www/uptime/config/default.yaml
+  	# - ./plugins/basicAuth
 
-{% highlight bash %}
-[hyperion ~ ] #grep 'plugins/basicAuth' /var/www/uptime/config/default.yaml
-  # - ./plugins/basicAuth
+	[hyperion ~ ] $ sed -i 's|# - ./plugins/basicAuth|- ./plugins/basicAuth|' /var/www/uptime/config/default.yaml
 
-[hyperion ~ ] # sed -i 's|# - ./plugins/basicAuth|- ./plugins/basicAuth|' /var/www/uptime/config/default.yaml
+	[hyperion ~ ] $ grep 'plugins/basicAuth' /var/www/uptime/config/default.yaml
+  	- ./plugins/basicAuth
 
-[hyperion ~ ] # grep 'plugins/basicAuth' /var/www/uptime/config/default.yaml
-  - ./plugins/basicAuth
-{% endhighlight %}
 
 It is time to test that we've got everything set up correctly by starting the app:
 
@@ -131,17 +129,14 @@ stderr_logfile = /var/log/supervisor/uptime_err.log
 
 We now need to reread the supervisor conf.d directory, update the process monitor, and start our service:
 
-{% highlight bash %}
-[hyperion ~ ] # supervisorctl reread
-uptime: available
+	[hyperion ~ ] $ supervisorctl reread
+	uptime: available
 
-[hyperion ~ ] # supervisorctl update
-uptime: added process group
+	[hyperion ~ ] $ supervisorctl update
+	uptime: added process group
 
-[hyperion ~ ] # supervisorctl start uptime
-uptime: started
-{% endhighlight %}
-
+	[hyperion ~ ] $ supervisorctl start uptime
+	uptime: started
 
 If all goes well you can again visit `http://x.x.x.x:8082` or `http://localhost:8082` and start setting our health checks. Happy Monitoring!!
 	
