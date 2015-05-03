@@ -29,7 +29,7 @@ Any files found in `/etc/supervisor/conf.d` ending in .conf will be read by Supe
 
 Here is my ghost.conf:
 
-```
+{% highlight bash %}
 [program:ghost]
 command = node /var/ghost/index.js
 directory = /var/ghost
@@ -39,7 +39,8 @@ autorestart = true
 stdout_logfile = /var/log/supervisor/ghost.log
 stderr_logfile = /var/log/supervisor/ghost_err.log
 environment = NODE_ENV="production"
-```
+{% endhighlight %}
+
 As you can see from the file I have ghost running from `/var/ghost` so you'll need to adjust this to fit your specific needs if you have ghost running from another directory
 
 Now we need to reread the `/etc/supervisor/conf.d` directory to pick up the new configuration file and update the Supervisor process monitor
@@ -53,7 +54,6 @@ Once the service reloads let's go ahead and start up the ghost script
 
 You can check the status of any running supervisor script by executing `supervisorctl status`
 
-```
-root@ghost:~# supervisorctl status
-ghost                            RUNNING    pid 7324, uptime 0:06:38
-```
+	root@ghost:~# supervisorctl status
+	ghost                            RUNNING    pid 7324, uptime 0:06:38
+

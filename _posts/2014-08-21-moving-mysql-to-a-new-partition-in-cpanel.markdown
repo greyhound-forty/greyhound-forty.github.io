@@ -10,7 +10,8 @@ The nice thing about this method is that it requires no mucking with the my.cnf 
 
 First we need to tell cPanel not to monitor/manage Mysql so that it does not try to restart the service while we are moving our data. To do this log in to WHM >> Main >> Service Configuration >> Service Manager and disable mysql. Once that is complete here are the commands to safely move Mysql to a new, larger partition (in this example I am moving mysql to the mount point /newvar):
 
-`service mysql stop  
+{% highlight bash %}
+service mysql stop  
 mkdir -p /newvar  
 mount /dev/xvdc1 /newvar  
 cp -r /var/lib/mysql/ /newvar/  
@@ -21,6 +22,7 @@ rm -rf /var/lib/mysql/
 ln -s /newvar/mysql /var/lib/mysql  
 rm -rf /tmp/mysql.sock  
 ln -s /newvar/mysql/mysql.sock /tmp/mysql.sock`
+{% endhighlight %}
 
 Now that we've moved everything we need to log back in to WHM and re-enable mysql. To do this we log in and go to Main >> Service Configuration >> Service Manager and enable mysql. Once the service is re-enabled let's test it to make sure everything starts back up properly. You can do so with the following command:
 
