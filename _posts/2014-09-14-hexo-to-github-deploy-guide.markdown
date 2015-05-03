@@ -27,17 +27,18 @@ Now we will install hexo using NPM:
 
 To test that hexo is installed properly we'll create a test blog and start the server:
 
+{% highlight bash %}
+ryan@ghost ~ % hexo init testing-site
+[info] Copying data
+[info] You are almost done! Don't forget to run `npm install` before you start blogging with Hexo!
 
-	ryan@ghost ~ % hexo init testing-site
-    [info] Copying data
-	[info] You are almost done! Don't forget to run `npm install` before you start blogging with Hexo!
+ryan@ghost ~ % cd testing-site
+ryan@ghost ~/testing-site % npm install
+<output output output>
 
-	ryan@ghost ~ % cd testing-site
-	ryan@ghost ~/testing-site % npm install
-    <output output output>
-
-	ryan@ghost ~/testing-site % hexo server
-	[info] Hexo is running at http://localhost:4000/. Press Ctrl+C to stop.
+ryan@ghost ~/testing-site % hexo server
+[info] Hexo is running at http://localhost:4000/. Press Ctrl+C to stop.
+{% endhighlight %}
 
 If all went well we can now visit http://localhost:4000/ to see the site up and running. While we could use something like the rather awesome [ngrok](https://ngrok.com/usage) to expose our locally hosted version to the internet for testing and the like, if we want to make this a fully functional, rock solid site we can also deploy it to Github Pages.
 
