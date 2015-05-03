@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Introduction to LVM: Part One</title>
+  <meta name="description" content="This guide shows you how to work with LVM (Logical Volume Management) on Linux. In this guide I am using an Ubuntu 12 VM running in Hyper-V but besides the i...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://yourdomain.com/2014/08/14/introduction-to-lvm-1.html">
+  <link rel="alternate" type="application/rss+xml" title="tinybot" href="http://yourdomain.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">tinybot</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Introduction to LVM: Part One</h1>
+    <p class="post-meta">Aug 14, 2014</p>
+  </header>
+
+  <article class="post-content">
+    <p>This guide shows you how to work with LVM (Logical Volume Management) on Linux. In this guide I am using an Ubuntu 12 VM running in Hyper-V but besides the install instructions the commands should work pretty much the same in every OS. First let’s list some of the highlights of LVM:</p>
+
+<ul>
+  <li>Resize volume groups online by absorbing new physical volumes (PV) or ejecting existing ones.</li>
+  <li>Resize logical volumes (LV) online by concatenating extents onto them or truncating extents from them.</li>
+  <li>Create read-only snapshots of logical volumes (LVM1).</li>
+  <li>Create RAID logical volumes (since recent LVM implementations, such as Red Hat Enterprise Linux v6 ): RAID1, RAID5, RAID6, etc.</li>
+  <li>Stripe whole or parts of logical volumes across multiple PVs, in a fashion similar to RAID 0.</li>
+  <li>Allocate thin-provisioned logical volumes from a pool</li>
+  <li>Move online logical volumes between PVs.</li>
+</ul>
+
+<h3 id="example-lvm-layout">Example LVM Layout</h3>
+
+<p><img src="http://i.imgur.com/IENkhog.png" alt="LVM Diagram" title="LVM Image Outline" /></p>
+
+<h3 id="lets-begin">Let’s Begin</h3>
+
+<p>To get started let’s look at the current disks that are not being used.</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; fdisk -l|egrep 'contain a valid partition table'
+Disk /dev/sdb doesn't contain a valid partition table
+Disk /dev/sdc doesn't contain a valid partition table
+Disk /dev/sdd doesn't contain a valid partition table
+</code></pre>
+
+<p>As you can see there are no partitions yet on /dev/sdb - /dev/sdd. We will go ahead and create the partition for sdb and then you can repeat the steps for sdc and sdd. I have stripped some of the fdisk output for formatting reasons:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; fdisk /dev/sdb
+Partition type:
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended
+Select (default p): p
+Partition number (1-4, default 1): 1
+First sector (2048-20971519, default 2048):
+Using default value 2048
+Last sector, +sectors or +size{K,M,G} (2048-20971519, default 20971519):
+Using default value 20971519
+Command (m for help): t
+Selected partition 1
+Hex code (type L to list codes): 8e
+Changed system type of partition 1 to 8e (Linux LVM)
+Command (m for help): w
+</code></pre>
+
+<p>Go ahead and repeat these steps for /dev/sdc and /dev/sdd ensuring that you use the ‘t’ command to mark the new partitions as LVM.</p>
+
+<h3 id="physical-volumes">Physical Volumes</h3>
+
+<p>Now that are partitions are created let’s prepare our new partitions for LVM</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; pvcreate /dev/sdb1 /dev/sdc1 /dev/sdd1
+  Physical volume "/dev/sdb1" successfully created
+  Physical volume "/dev/sdc1" successfully created
+  Physical volume "/dev/sdd1" successfully created
+</code></pre>
+
+<p>If you need to remove the Physical Volumes you can simply use the pvremove command:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; pvremove /dev/sdb1 /dev/sdc1 /dev/sdd1
+  Labels on physical volume "/dev/sdb1" successfully wiped
+  Labels on physical volume "/dev/sdc1" successfully wiped
+  Labels on physical volume "/dev/sdd1" successfully wiped
+</code></pre>
+
+<p>Now that we have shown how to remove the Physical volumes, let’s go ahead and create them one more time:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; pvcreate /dev/sdb1 /dev/sdc1 /dev/sdd1
+  Physical volume "/dev/sdb1" successfully created
+  Physical volume "/dev/sdc1" successfully created
+  Physical volume "/dev/sdd1" successfully created
+</code></pre>
+
+<p>We can check on the state of the Physical Volumes by using the pvdisplay command:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/sda5
+  VG Name               telesto-vg
+  PV Size               19.76 GiB / not usable 2.00 MiB
+  Allocatable           yes
+  PE Size               4.00 MiB
+  Total PE              5058
+  Free PE               5
+  Allocated PE          5053
+  PV UUID               6rm54Y-GFwa-fz5N-xpji-Hnnh-N6Eu-0b58MP
+
+  "/dev/sdb1" is a new physical volume of "10.00 GiB"
+  --- NEW Physical volume ---
+  PV Name               /dev/sdb1
+  VG Name
+  PV Size               10.00 GiB
+  Allocatable           NO
+  PE Size               0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               Ea9mWF-dxip-hA3n-AqoK-Q47M-f3IJ-OnLr9Q
+
+  "/dev/sdc1" is a new physical volume of "10.00 GiB"
+  --- NEW Physical volume ---
+  PV Name               /dev/sdc1
+  VG Name
+  PV Size               10.00 GiB
+  Allocatable           NO
+  PE Size               0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               BD3fMg-VLsy-rYf9-P6gN-FNdB-lTLL-YemEJU
+
+  "/dev/sdd1" is a new physical volume of "10.00 GiB"
+  --- NEW Physical volume ---
+  PV Name               /dev/sdd1
+  VG Name
+  PV Size               10.00 GiB
+  Allocatable           NO
+  PE Size               0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               vambW6-lZyD-1Jgk-TqMi-IAYy-SU4Q-0KpF1Z
+</code></pre>
+
+<h3 id="volume-groups">Volume Groups</h3>
+
+<p>Now let’s create our Volume group. A Volume group is a set of physical partitions that are presented to your operating system as Logical volumes. In this case we are creating a Volume group called ‘data’ and adding our 3 extra drives to the group</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; vgcreate data /dev/sdb1 /dev/sdc1 /dev/sdd1
+Volume group "data" successfully created
+</code></pre>
+
+<p>To get the state of your current Volume groups use the vgdisplay command:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; vgdisplay
+  --- Volume group ---
+  VG Name               data
+  System ID
+  Format                lvm2
+  Metadata Areas        3
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                3
+  Act PV                3
+  VG Size               29.99 GiB
+  PE Size               4.00 MiB
+  Total PE              7677
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       7677 / 29.99 GiB
+  VG UUID               DWO3xh-8v9i-GA5J-BklW-gDts-Ic5r-7jIrZa
+
+  --- Volume group ---
+  VG Name               telesto-vg
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  3
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                2
+  Open LV               2
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               19.76 GiB
+  PE Size               4.00 MiB
+  Total PE              5058
+  Alloc PE / Size       5053 / 19.74 GiB
+  Free  PE / Size       5 / 20.00 MiB
+  VG UUID               6pnQaD-Uoft-mN5y-enmi-kojN-2qH7-AcfPdR
+</code></pre>
+
+<p>Another important command for working with Volume groups is vgsan. The vgscan command scans all SCSI, IDE, and many other disk devices in the system looking for LVM physical volumes and volume groups.</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; vgscan
+Reading all physical volumes.  This may take a while...
+Found volume group "data" using metadata type lvm2
+Found volume group "telesto-vg" using metadata type lvm2
+</code></pre>
+
+<p>Let’s go ahead and rename our current Volume group from data to testing and rescan the system with vgscan:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; vgrename data testing
+Volume group "data" successfully renamed to "testing"
+
+[telesto] (~) &gt;&gt;&gt; vgscan
+Reading all physical volumes.  This may take a while...
+Found volume group "testing" using metadata type lvm2
+Found volume group "telesto-vg" using metadata type lvm2
+
+[telesto] (~) &gt;&gt;&gt; vgdisplay
+  --- Volume group ---
+  VG Name               testing
+  System ID
+  Format                lvm2
+  Metadata Areas        3
+  Metadata Sequence No  2
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                3
+  Act PV                3
+  VG Size               29.99 GiB
+  PE Size               4.00 MiB
+  Total PE              7677
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       7677 / 29.99 GiB
+  VG UUID               DWO3xh-8v9i-GA5J-BklW-gDts-Ic5r-7jIrZa
+
+  --- Volume group ---
+  VG Name               telesto-vg
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  3
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                2
+  Open LV               2
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               19.76 GiB
+  PE Size               4.00 MiB
+  Total PE              5058
+  Alloc PE / Size       5053 / 19.74 GiB
+  Free  PE / Size       5 / 20.00 MiB
+  VG UUID               6pnQaD-Uoft-mN5y-enmi-kojN-2qH7-AcfPdR
+</code></pre>
+
+<p>Like with Physical volumes we can also remove Volume groups. For this we use the <code>vgremove</code> command:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; vgremove testing
+Volume group "testing" successfully removed
+[telesto] (~) &gt;&gt;&gt; vgscan
+Reading all physical volumes.  This may take a while...
+Found volume group "telesto-vg" using metadata type lvm2
+</code></pre>
+
+<p>Now we can recreate our Volume group so that we can move on to working with Logical volumes:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; vgcreate data /dev/sdb1 /dev/sdc1 /dev/sdd1
+Volume group "data" successfully created  
+[telesto] (~) &gt;&gt;&gt; vgscan
+Reading all physical volumes.  This may take a while...
+Found volume group "data" using metadata type lvm2
+Found volume group "telesto-vg" using metadata type lvm2
+</code></pre>
+
+<h3 id="logical-volumes">Logical Volumes</h3>
+
+<p>Next we move on to creating our logical volumes named backup (5GB), nfs (5GB), and media (2GB) in our Volume group data.</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; lvcreate --name backup --size 5G data
+  Logical volume "backup" created
+
+[telesto] (~) &gt;&gt;&gt; lvcreate --name nfs --size 5G data
+  Logical volume "nfs" created
+
+[telesto] (~) &gt;&gt;&gt; lvcreate --name media --size 2G data
+  Logical volume "media" created
+</code></pre>
+
+<p>Let’s get an overview of our Logical volumes by issuing the <code>lvdisplay</code> command:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/data/backup
+  VG Name                data
+  LV UUID                AOsCPj-SXkq-09Ev-jJU9-pKaZ-JfmS-VDQqln
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                5.00 GiB
+  Current LE             1280
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           252:2
+
+  --- Logical volume ---
+  LV Name                /dev/data/nfs
+  VG Name                data
+  LV UUID                Q40nWG-i2c9-KS8A-wChV-EmDF-bgJC-8kM12U
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                5.00 GiB
+  Current LE             1280
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           252:3
+
+  --- Logical volume ---
+  LV Name                /dev/data/media
+  VG Name                data
+  LV UUID                hN0duL-AJu9-OhrI-kstI-pAGI-e8f6-5i0P3P
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                2.00 GiB
+  Current LE             512
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           252:4
+
+  --- Logical volume ---
+  LV Name                /dev/telesto-vg/root
+  VG Name                telesto-vg
+  LV UUID                JUfWbF-i5tC-mLGE-SVVG-Arwi-CXT8-vLnTxv
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                17.74 GiB
+  Current LE             4542
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           252:0
+
+  --- Logical volume ---
+  LV Name                /dev/telesto-vg/swap_1
+  VG Name                telesto-vg
+  LV UUID                72mC2a-Vy79-FYB3-Pj7E-excU-wKzY-FhoRMT
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                2.00 GiB
+  Current LE             511
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           252:1
+</code></pre>
+
+<p>We can issue <code>lvscan</code> to look at the system and identify Logical volumes:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; lvscan
+  ACTIVE            '/dev/data/backup' [5.00 GiB] inherit
+  ACTIVE            '/dev/data/nfs' [5.00 GiB] inherit
+  ACTIVE            '/dev/data/media' [2.00 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/root' [17.74 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/swap_1' [2.00 GiB] inherit
+</code></pre>
+
+<p>Like with the Volume groups, we can rename Logical Volumes on the fly. In this case we are going to use <code>lvrename</code> to rename nfs to exports</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; lvrename data nfs exports
+  Renamed "nfs" to "exports" in volume group "data"
+
+[telesto] (~) &gt;&gt;&gt; lvscan
+  ACTIVE            '/dev/data/backup' [5.00 GiB] inherit
+  ACTIVE            '/dev/data/exports' [5.00 GiB] inherit
+  ACTIVE            '/dev/data/media' [2.00 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/root' [17.74 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/swap_1' [2.00 GiB] inherit
+</code></pre>
+
+<p>For further practice let’s remove the Logical volume exports now using the <code>lvremove</code> command. This command actually requires the full path to the Logical volume you would like to remove:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; lvremove /dev/data/exports
+Do you really want to remove active logical volume exports? [y/n]: y
+  Logical volume "exports" successfully removed
+
+[telesto] (~) &gt;&gt;&gt; lvscan
+  ACTIVE            '/dev/data/backup' [5.00 GiB] inherit
+  ACTIVE            '/dev/data/media' [2.00 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/root' [17.74 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/swap_1' [2.00 GiB] inherit
+</code></pre>
+
+<p>Let’s create the logical volume nfs again:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; lvcreate --name nfs --size 5G data
+  Logical volume "nfs" created
+
+[telesto] (~) &gt;&gt;&gt; lvscan
+  ACTIVE            '/dev/data/backup' [5.00 GiB] inherit
+  ACTIVE            '/dev/data/media' [2.00 GiB] inherit
+  ACTIVE            '/dev/data/nfs' [5.00 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/root' [17.74 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/swap_1' [2.00 GiB] inherit
+</code></pre>
+
+<p>Another big benefit of LVM is the ability to extend and contract storage as needed. In this example we will extend the backup Logical volume by 5GB for a total of 10GB using the <code>lvextend</code> command. This command also requires the full path to the Volume group:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; lvextend -L10G /dev/data/backup
+  Extending logical volume backup to 10.00 GiB
+  Logical volume backup successfully resized
+</code></pre>
+
+<p>To reduce the size of the Volume group you would use the aptly named <code>lvreduce</code> command. Let’s shrink the backup volume down to 7GB:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; lvreduce -L7G /dev/data/backup
+  WARNING: Reducing active logical volume to 7.00 GiB
+  THIS MAY DESTROY YOUR DATA (filesystem etc.)
+Do you really want to reduce backup? [y/n]: y
+  Reducing logical volume backup to 7.00 GiB
+  Logical volume backup successfully resized
+
+[telesto] (~) &gt;&gt;&gt; lvscan
+  ACTIVE            '/dev/data/backup' [7.00 GiB] inherit
+  ACTIVE            '/dev/data/media' [2.00 GiB] inherit
+  ACTIVE            '/dev/data/nfs' [5.00 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/root' [17.74 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/swap_1' [2.00 GiB] inherit
+</code></pre>
+
+<p>This concludes the first introduction to LVM. In part 2 we will go in to creating the Filesystems and integrating the new LVM bits in to our running system.</p>
+
+<h3 id="remove-lvm-and-reset-server">Remove LVM and reset server</h3>
+
+<p>Yes if you were smart enough to take a snapshot of your system you could simply roll back, but I thought it would be useful to show how to properly remove your LVM tracks. Let’s start by removing the Logical Volumes we created:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; lvscan
+  ACTIVE            '/dev/data/backup' [7.00 GiB] inherit
+  ACTIVE            '/dev/data/media' [2.00 GiB] inherit
+  ACTIVE            '/dev/data/nfs' [5.00 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/root' [17.74 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/swap_1' [2.00 GiB] inherit
+
+[telesto] (~) &gt;&gt;&gt; lvremove /dev/data/nfs /dev/data/media /dev/data/backup
+Do you really want to remove active logical volume media? [y/n]: y
+  Logical volume "media" successfully removed
+Do you really want to remove active logical volume nfs? [y/n]: y
+  Logical volume "nfs" successfully removed
+Do you really want to remove active logical volume backup? [y/n]: y
+  Logical volume "backup" successfully removed
+
+[telesto] (~) &gt;&gt;&gt; lvscan
+  ACTIVE            '/dev/telesto-vg/root' [17.74 GiB] inherit
+  ACTIVE            '/dev/telesto-vg/swap_1' [2.00 GiB] inherit
+</code></pre>
+
+<p>The next layer to peel away is the Volume group we created. Let’s go ahead and remove that:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "data" using metadata type lvm2
+  Found volume group "telesto-vg" using metadata type lvm2
+ 07:45:37 PM
+[telesto] (~) &gt;&gt;&gt; vgremove data
+  Volume group "data" successfully removed
+
+[telesto] (~) &gt;&gt;&gt; vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "telesto-vg" using metadata type lvm2
+</code></pre>
+
+<p>Two more layers to go. This time let’s remove the Physical Volume</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; pvscan
+  PV /dev/sda5   VG telesto-vg      lvm2 [19.76 GiB / 20.00 MiB free]
+  PV /dev/sdb1                      lvm2 [10.00 GiB]
+  PV /dev/sdc1                      lvm2 [10.00 GiB]
+  PV /dev/sdd1                      lvm2 [10.00 GiB]
+  Total: 4 [49.75 GiB] / in use: 1 [19.76 GiB] / in no VG: 3 [30.00 GiB]
+
+[telesto] (~) &gt;&gt;&gt; pvremove /dev/sdb1 /dev/sdc1 /dev/sdd1
+  Labels on physical volume "/dev/sdb1" successfully wiped
+  Labels on physical volume "/dev/sdc1" successfully wiped
+  Labels on physical volume "/dev/sdd1" successfully wiped
+
+[telesto] (~) &gt;&gt;&gt; pvscan
+  PV /dev/sda5   VG telesto-vg   lvm2 [19.76 GiB / 20.00 MiB free]
+  Total: 1 [19.76 GiB] / in use: 1 [19.76 GiB] / in no VG: 0 [0   ]
+</code></pre>
+
+<p>And finally we remove the wipe the partition table from the drive using <a href="http://example.com" title="Fdisk Guide">fdisk</a> or <a href="http://example.com" title="Parted Guide">parted</a>. In this example I only show wiping 2 of the drives. Use one of the mentioned tools to wipe the third drives partition table:</p>
+
+<pre><code>[telesto] (~) &gt;&gt;&gt; fdisk /dev/sdb  
+
+Command (m for help): d
+Selected partition 1
+
+Command (m for help): w
+The partition table has been altered!
+
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+[telesto] (~) &gt;&gt;&gt; parted /dev/sdc
+GNU Parted 2.3
+Using /dev/sdc
+Welcome to GNU Parted! Type 'help' to view a list of commands.
+(parted) p
+Model: Msft Virtual Disk (scsi)
+Disk /dev/sdc: 10.7GB
+Sector size (logical/physical): 512B/512B
+Partition Table: msdos
+
+Number  Start   End     Size    Type     File system  Flags
+ 1      1049kB  10.7GB  10.7GB  primary               lvm
+
+(parted) rm 1
+(parted) quit
+Information: You may need to update /etc/fstab.
+</code></pre>
+
+<p>To remove your MBR &amp; partition table you would then run the following for each drive. Please type this one out or at least copy/pasta in to a text editor first and make sure you are not accidentally wiping a drive that is in use:</p>
+
+<pre><code>dd if=/dev/zero of=/dev/sdb bs=512 count=1
+</code></pre>
+
+<p>This guide was made possible by the following sites:</p>
+
+<p><a href="http://www.howtoforge.com/linux_lvm" title="A Beginner's Guide To LVM">A Beginner’s Guide To LVM on howtoforge.com</a><br />
+<a href="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/6/html-single/Logical_Volume_Manager_Administration/" title="Logical Volume Manager Administration">Logical Volume Manager Administration by Redhat</a></p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">tinybot</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>tinybot</li>
+          <li><a href="mailto:ryantiffany@gmail.com">ryantiffany@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/greyhound-forty">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">greyhound-forty</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/ryantiffany">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">ryantiffany</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text"></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

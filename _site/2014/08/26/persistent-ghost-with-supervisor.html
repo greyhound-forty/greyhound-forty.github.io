@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>tinybot</title>
-  <meta name="description" content="">
+  <title>Persistent Ghost with Supervisor</title>
+  <meta name="description" content="I love trying out new blogging services and while they are usually maintained for only a short period of time that is more of a failing on my part and less o...">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://yourdomain.com/">
+  <link rel="canonical" href="http://yourdomain.com/2014/08/26/persistent-ghost-with-supervisor.html">
   <link rel="alternate" type="application/rss+xml" title="tinybot" href="http://yourdomain.com/feed.xml" />
 </head>
 
@@ -54,103 +54,72 @@
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="home">
+        <div class="post">
 
-  <h1 class="page-heading">Posts</h1>
+  <header class="post-header">
+    <h1 class="post-title">Persistent Ghost with Supervisor</h1>
+    <p class="post-meta">Aug 26, 2014</p>
+  </header>
 
-  <ul class="post-list">
-    
-      <li>
-        <span class="post-meta">May 1, 2015</span>
+  <article class="post-content">
+    <p>I love trying out new blogging services and while they are usually maintained for only a short period of time that is more of a failing on my part and less on the actual technology. My current favorite for self-hosted blogging is <a href="https://ghost.org/">Ghost</a>. By default if you start Ghost using the command line it will stop whenever you are closing the terminal window or log out from your current SSH session. To get around this limitation we will be using <a href="http://supervisord.org/">Supervisor</a>. In this guide I am using an Ubuntu 14 server but this has been tested on 12 and works without issue. Now that we have the diatribe out of the way, let’s begin:</p>
 
-        <h2>
-          <a class="post-link" href="/jekyll/update/2015/05/01/intro-to-nix.html">Introduction to *Nix: Part 1</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Sep 14, 2014</span>
+<p>Our first step is of course to make sure that our system is up to date and to install the supervisor package</p>
 
-        <h2>
-          <a class="post-link" href="/2014/09/14/hexo-to-github-deploy-guide.html">Hexo to Github: Deploy Guide</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Sep 10, 2014</span>
+<pre><code>apt-get update
+apt-get install supervisor -y
+</code></pre>
 
-        <h2>
-          <a class="post-link" href="/2014/09/10/virtualbox-headless-on-ubuntu-1214.html">VirtualBox Headless on Ubuntu 12/14</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 28, 2014</span>
+<p>Now that we have installed Supervisor we need to make sure it starts.</p>
 
-        <h2>
-          <a class="post-link" href="/2014/08/28/server-monitoring-with-uptime-and-supervisord.html">Server Monitoring with Uptime and Supervisord</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 26, 2014</span>
+<pre><code>service supervisor start
+</code></pre>
 
-        <h2>
-          <a class="post-link" href="/2014/08/26/persistent-ghost-with-supervisor.html">Persistent Ghost with Supervisor</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 25, 2014</span>
+<p>If all goes well you should have Supervisor up and running. The main configuration file for Supervisor is located at <code>/etc/supervisor/supervisord.conf</code> but Supervisor also includes a conf.d directory to store the individual program files:</p>
 
-        <h2>
-          <a class="post-link" href="/2014/08/25/new-ubuntu-server-setup-1214.html">New Ubuntu Server Setup 12/14</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 24, 2014</span>
+<pre><code>[include]
+files = /etc/supervisor/conf.d/*.conf
+</code></pre>
 
-        <h2>
-          <a class="post-link" href="/2014/08/24/universal-installer-rev-1.html">Universal Installer Rev. 1</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 21, 2014</span>
+<p>Any files found in <code>/etc/supervisor/conf.d</code> ending in .conf will be read by Supervisor. Use your favorite text editor and create a ghost.conf:</p>
 
-        <h2>
-          <a class="post-link" href="/2014/08/21/moving-mysql-to-a-new-partition-in-cpanel.html">Moving Mysql to a new partition in cPanel</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 18, 2014</span>
+<pre><code>nano -w /etc/supervisor/conf.d/ghost.conf
+</code></pre>
 
-        <h2>
-          <a class="post-link" href="/2014/08/18/securing-ubuntu-server-1214---initial-setup.html">Securing Ubuntu Server 12/14 - Initial Setup</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 16, 2014</span>
+<p>Here is my ghost.conf:</p>
 
-        <h2>
-          <a class="post-link" href="/2014/08/16/introduction-to-lvm-part-two.html">Introduction to LVM: Part Two</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 14, 2014</span>
+<p><code>
+[program:ghost]
+command = node /var/ghost/index.js
+directory = /var/ghost
+user = ghost
+autostart = true
+autorestart = true
+stdout_logfile = /var/log/supervisor/ghost.log
+stderr_logfile = /var/log/supervisor/ghost_err.log
+environment = NODE_ENV="production"
+</code>
+As you can see from the file I have ghost running from <code>/var/ghost</code> so you’ll need to adjust this to fit your specific needs if you have ghost running from another directory</p>
 
-        <h2>
-          <a class="post-link" href="/2014/08/14/introduction-to-lvm-1.html">Introduction to LVM: Part One</a>
-        </h2>
-      </li>
-    
-  </ul>
+<p>Now we need to reread the <code>/etc/supervisor/conf.d</code> directory to pick up the new configuration file and update the Supervisor process monitor</p>
 
-  <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+<pre><code>supervisorctl reread
+supervisorctl update
+</code></pre>
+
+<p>Once the service reloads let’s go ahead and start up the ghost script</p>
+
+<pre><code>supervisorctl start ghost
+</code></pre>
+
+<p>You can check the status of any running supervisor script by executing <code>supervisorctl status</code></p>
+
+<p><code>
+root@ghost:~# supervisorctl status
+ghost                            RUNNING    pid 7324, uptime 0:06:38
+</code></p>
+
+  </article>
 
 </div>
 

@@ -6,11 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>tinybot</title>
-  <meta name="description" content="">
+  <title>Moving Mysql to a new partition in cPanel</title>
+  <meta name="description" content="I’ve had to deal with quiet a few clients who have filled up their /var partition due to mysql being stored by default on a small partition. This is a short ...">
 
   <link rel="stylesheet" href="/css/main.css">
-  <link rel="canonical" href="http://yourdomain.com/">
+  <link rel="canonical" href="http://yourdomain.com/2014/08/21/moving-mysql-to-a-new-partition-in-cpanel.html">
   <link rel="alternate" type="application/rss+xml" title="tinybot" href="http://yourdomain.com/feed.xml" />
 </head>
 
@@ -54,103 +54,37 @@
 
     <div class="page-content">
       <div class="wrapper">
-        <div class="home">
+        <div class="post">
 
-  <h1 class="page-heading">Posts</h1>
+  <header class="post-header">
+    <h1 class="post-title">Moving Mysql to a new partition in cPanel</h1>
+    <p class="post-meta">Aug 21, 2014</p>
+  </header>
 
-  <ul class="post-list">
-    
-      <li>
-        <span class="post-meta">May 1, 2015</span>
+  <article class="post-content">
+    <p>I’ve had to deal with quiet a few clients who have filled up their /var partition due to mysql being stored by default on a small partition. This is a short little guide on how to move mysql to another parition on the system.</p>
 
-        <h2>
-          <a class="post-link" href="/jekyll/update/2015/05/01/intro-to-nix.html">Introduction to *Nix: Part 1</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Sep 14, 2014</span>
+<p>The nice thing about this method is that it requires no mucking with the my.cnf file. Additionally if the stock-default MySQL data directory is retained via a symlink, this still allows for the directory contents to be saved when WHM runs its backup utility.</p>
 
-        <h2>
-          <a class="post-link" href="/2014/09/14/hexo-to-github-deploy-guide.html">Hexo to Github: Deploy Guide</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Sep 10, 2014</span>
+<p>First we need to tell cPanel not to monitor/manage Mysql so that it does not try to restart the service while we are moving our data. To do this log in to WHM » Main » Service Configuration » Service Manager and disable mysql. Once that is complete here are the commands to safely move Mysql to a new, larger partition (in this example I am moving mysql to the mount point /newvar):</p>
 
-        <h2>
-          <a class="post-link" href="/2014/09/10/virtualbox-headless-on-ubuntu-1214.html">VirtualBox Headless on Ubuntu 12/14</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 28, 2014</span>
+<p><code>service mysql stop  
+mkdir -p /newvar  
+mount /dev/xvdc1 /newvar  
+cp -r /var/lib/mysql/ /newvar/  
+mkdir -p /newvar/mysql/backupmysql/  
+mv -v /var/lib/mysql/* /newvar/mysql/backupmysql/  
+chown -R mysql:mysql /newvar/mysql/  
+rm -rf /var/lib/mysql/  
+ln -s /newvar/mysql /var/lib/mysql  
+rm -rf /tmp/mysql.sock  
+ln -s /newvar/mysql/mysql.sock /tmp/mysql.sock</code></p>
 
-        <h2>
-          <a class="post-link" href="/2014/08/28/server-monitoring-with-uptime-and-supervisord.html">Server Monitoring with Uptime and Supervisord</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 26, 2014</span>
+<p>Now that we’ve moved everything we need to log back in to WHM and re-enable mysql. To do this we log in and go to Main » Service Configuration » Service Manager and enable mysql. Once the service is re-enabled let’s test it to make sure everything starts back up properly. You can do so with the following command:</p>
 
-        <h2>
-          <a class="post-link" href="/2014/08/26/persistent-ghost-with-supervisor.html">Persistent Ghost with Supervisor</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 25, 2014</span>
+<p><code>/scripts/restartsrv mysql</code></p>
 
-        <h2>
-          <a class="post-link" href="/2014/08/25/new-ubuntu-server-setup-1214.html">New Ubuntu Server Setup 12/14</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 24, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/2014/08/24/universal-installer-rev-1.html">Universal Installer Rev. 1</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 21, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/2014/08/21/moving-mysql-to-a-new-partition-in-cpanel.html">Moving Mysql to a new partition in cPanel</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 18, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/2014/08/18/securing-ubuntu-server-1214---initial-setup.html">Securing Ubuntu Server 12/14 - Initial Setup</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 16, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/2014/08/16/introduction-to-lvm-part-two.html">Introduction to LVM: Part Two</a>
-        </h2>
-      </li>
-    
-      <li>
-        <span class="post-meta">Aug 14, 2014</span>
-
-        <h2>
-          <a class="post-link" href="/2014/08/14/introduction-to-lvm-1.html">Introduction to LVM: Part One</a>
-        </h2>
-      </li>
-    
-  </ul>
-
-  <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
+  </article>
 
 </div>
 

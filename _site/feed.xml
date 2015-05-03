@@ -5,8 +5,8 @@
     <description></description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sat, 02 May 2015 08:23:20 -0500</pubDate>
-    <lastBuildDate>Sat, 02 May 2015 08:23:20 -0500</lastBuildDate>
+    <pubDate>Sat, 02 May 2015 08:47:34 -0500</pubDate>
+    <lastBuildDate>Sat, 02 May 2015 08:47:34 -0500</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -115,6 +115,1229 @@ tinybot± &lt;span class=&quot;nb&quot;&gt;pwd&lt;/span&gt;
         <category>jekyll</category>
         
         <category>update</category>
+        
+      </item>
+    
+      <item>
+        <title>Hexo to Github: Deploy Guide</title>
+        <description>&lt;p&gt;Today we’re going to look at deploying &lt;a href=&quot;http://hexo.io/&quot;&gt;Hexo&lt;/a&gt; via Github Pages. This will allow us to control everything on our local system and then push the changes to Github as needed. This tutorial is designed for Ubuntu 12/14 but should work on Cent/RHEL as well.&lt;/p&gt;
+
+&lt;h3 id=&quot;first-install-nvm-and-npm&quot;&gt;First install NVM and npm&lt;/h3&gt;
+
+&lt;p&gt;Our first step is to actually install node.js, but we are going to be using &lt;a href=&quot;https://github.com/creationix/nvm&quot;&gt;NVM&lt;/a&gt; to help us avoid permissions issues with a default install of node. For this guide we are installing node v0.10.29:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl https://raw.githubusercontent.com/creationix/nvm/v0.11.1/install.sh | bash
+nvm install 0.10.29
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let’s check our installed version:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;» node -v
+v0.10.29
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we will install hexo using NPM:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install hexo -g
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To test that hexo is installed properly we’ll create a test blog and start the server:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ryan@ghost ~ % hexo init testing-site
+[info] Copying data
+[info] You are almost done! Don&#39;t forget to run `npm install` before you start blogging with Hexo!
+
+ryan@ghost ~ % cd testing-site
+ryan@ghost ~/testing-site % npm install
+&amp;lt;output output output&amp;gt;
+
+ryan@ghost ~/testing-site % hexo server
+[info] Hexo is running at http://localhost:4000/. Press Ctrl+C to stop.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If all went well we can now visit http://localhost:4000/ to see the site up and running. While we could use something like the rather awesome &lt;a href=&quot;https://ngrok.com/usage&quot;&gt;ngrok&lt;/a&gt; to expose our locally hosted version to the internet for testing and the like, if we want to make this a fully functional, rock solid site we can also deploy it to Github Pages.&lt;/p&gt;
+
+&lt;h3 id=&quot;set-up-a-new-repository-on-github&quot;&gt;Set up a new repository on Github&lt;/h3&gt;
+
+&lt;p&gt;If you are new to Github, here is a guide on creating a new Repository: &lt;a href=&quot;https://help.github.com/articles/create-a-repo&quot;&gt;Create a Repo&lt;/a&gt;. I would also highly recommend that you have SSH-keys set up in Github so that you do not need to enter in your username and password everytime you run &lt;code&gt;hexo deploy&lt;/code&gt;. For setting up SSH keys, see &lt;a href=&quot;https://help.github.com/articles/generating-ssh-keys&quot;&gt;this guide&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;After we’ve set up our new repo we’ll head back to our local system and clone our newly created repo:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rm -rf ~/testing-site
+git clone git@github.com:greyhound-forty/ballin-octo-batman.git ~/testing-site
+cd ~/testing-site
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now since we are publishing to Github pages we need to switch to a gh-pages branch and remove any files that were present in the repo:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git checkout --orphan gh-pages
+git rm -rf .
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let’s go ahead and initialize a new hexo setup in the current directory and make sure it is ready to go. We’ll also create a test page so that we can&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hexo init .
+npm install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create a new page and push to Github:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hexo new &quot;Testing Deploy&quot;
+git add .
+git commit -a -m &quot;First pages commit&quot;
+git push origin gh-pages
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we will edit the configuration file with our Github repository details. You have the option of adding a line for a specific branch you want to publish to but Hexo can figure this out automatically so I am leaving it out. From my experience if you are deploying to a main Github page (i.e. youruser.github.io) then you can leave this blank. If you are pushing to a child page like http://youruser.github.io/blog then it is best to to add the line &lt;code&gt;branch: gh-pages&lt;/code&gt; under the repository section.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+deploy:
+  type: github
+  repository: git@github.com:greyhound-forty/fuzzy-octo-meme.git
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now generate and deploy&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;hexo generate
+hexo deploy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we’ve set up everything correctly the output should look something like this:&lt;/p&gt;
+
+&lt;p&gt;```
+ryan@ghost ~/testing-site [gh-pages *] % hexo generate
+[info] Files loaded in 0.136s
+[create] Generated: archives/index.html (74ms)
+[create] Generated: archives/2014/index.html (21ms)
+[create] Generated: archives/2014/08/index.html (15ms)
+[create] Generated: index.html (13ms)
+[create] Generated: 2014/08/25/testing-deploy/index.html (13ms)
+[create] Generated: 2014/08/25/hello-world/index.html (18ms)
+[create] Generated: js/script.js (2ms)
+[create] Generated: css/style.css (691ms)
+[create] Generated: css/fonts/FontAwesome.otf (2ms)
+[create] Generated: css/fonts/fontawesome-webfont.eot (1ms)
+[create] Generated: css/fonts/fontawesome-webfont.svg (1ms)
+[create] Generated: css/fonts/fontawesome-webfont.ttf (1ms)
+[create] Generated: css/fonts/fontawesome-webfont.woff (1ms)
+[create] Generated: css/images/banner.jpg (2ms)
+[create] Generated: fancybox/blank.gif (1ms)
+[create] Generated: fancybox/fancybox_loading.gif (1ms)
+[create] Generated: fancybox/fancybox_loading@2x.gif (1ms)
+[create] Generated: fancybox/fancybox_overlay.png (1ms)
+[create] Generated: fancybox/fancybox_sprite.png (1ms)
+[create] Generated: fancybox/fancybox_sprite@2x.png (1ms)
+[create] Generated: fancybox/jquery.fancybox.css (1ms)
+[create] Generated: fancybox/jquery.fancybox.js (1ms)
+[create] Generated: fancybox/jquery.fancybox.pack.js (1ms)
+[create] Generated: fancybox/helpers/fancybox_buttons.png (1ms)
+[create] Generated: fancybox/helpers/jquery.fancybox-buttons.css (1ms)
+[create] Generated: fancybox/helpers/jquery.fancybox-buttons.js (1ms)
+[create] Generated: fancybox/helpers/jquery.fancybox-media.js (2ms)
+[create] Generated: fancybox/helpers/jquery.fancybox-thumbs.css (0ms)
+[create] Generated: fancybox/helpers/jquery.fancybox-thumbs.js (0ms)
+[info] 29 files generated in 0.884s&lt;/p&gt;
+
+&lt;p&gt;ryan@ghost ~/testing-site [gh-pages *] % hexo deploy
+[info] Start deploying: github
+[info] Setting up GitHub deployment…
+Initialized empty Git repository in /home/ryan/testing-site/.deploy/.git/
+[master (root-commit) b62505d] First commit
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 placeholder
+[info] Clearing .deploy folder…
+[info] Copying files from public folder…
+[gh-pages b1df09b] Site updated: 2014-08-26 00:00:55
+ 30 files changed, 6207 insertions(+)
+ create mode 100644 2014/08/25/hello-world/index.html
+ create mode 100644 2014/08/25/testing-deploy/index.html
+ create mode 100644 archives/2014/08/index.html
+ create mode 100644 archives/2014/index.html
+ create mode 100644 archives/index.html
+ create mode 100644 css/fonts/FontAwesome.otf
+ create mode 100644 css/fonts/fontawesome-webfont.eot
+ create mode 100644 css/fonts/fontawesome-webfont.svg
+ create mode 100644 css/fonts/fontawesome-webfont.ttf
+ create mode 100644 css/fonts/fontawesome-webfont.woff
+ create mode 100644 css/images/banner.jpg
+ create mode 100644 css/style.css
+ create mode 100644 fancybox/blank.gif
+ create mode 100644 fancybox/fancybox_loading.gif
+ create mode 100644 fancybox/fancybox_loading@2x.gif
+ create mode 100644 fancybox/fancybox_overlay.png
+ create mode 100644 fancybox/fancybox_sprite.png
+ create mode 100644 fancybox/fancybox_sprite@2x.png
+ create mode 100644 fancybox/helpers/fancybox_buttons.png
+ create mode 100644 fancybox/helpers/jquery.fancybox-buttons.css
+ create mode 100644 fancybox/helpers/jquery.fancybox-buttons.js
+ create mode 100644 fancybox/helpers/jquery.fancybox-media.js
+ create mode 100644 fancybox/helpers/jquery.fancybox-thumbs.css
+ create mode 100644 fancybox/helpers/jquery.fancybox-thumbs.js
+ create mode 100644 fancybox/jquery.fancybox.css
+ create mode 100644 fancybox/jquery.fancybox.js
+ create mode 100644 fancybox/jquery.fancybox.pack.js
+ create mode 100644 index.html
+ create mode 100644 js/script.js
+ delete mode 100644 placeholder
+Warning: Permanently added the RSA host key for IP address ‘x.x.x.x’ to the list of known hosts.
+To git@github.com:greyhound-forty/ballin-octo-batman.git
+ + e6fe5eb…b1df09b gh-pages -&amp;gt; gh-pages (forced update)
+Branch gh-pages set up to track remote branch gh-pages from git@github.com:greyhound-forty/ballin-octo-batman.git.
+[info] Deploy done: github
+```&lt;/p&gt;
+
+&lt;p&gt;It takes about 10 minutes for Github Pages sites to show up, but you can see my test page &lt;a href=&quot;http://greyhound-forty.github.io/ballin-octo-batman&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;clean-up&quot;&gt;Clean up&lt;/h3&gt;
+&lt;p&gt;Remove .deploy folder.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;rm -rf .deploy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;custom-domain&quot;&gt;Custom Domain&lt;/h3&gt;
+
+&lt;p&gt;If you want to use a custom domain instead of using a github.io page, create a file named &lt;code&gt;CNAME&lt;/code&gt; in &lt;code&gt;source&lt;/code&gt; folder with the following content.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;yourcustomdomain.com
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You will then need to run &lt;code&gt;hexo generate&lt;/code&gt; and &lt;code&gt;hexo deploy&lt;/code&gt; to update the site with the custom domain.&lt;/p&gt;
+</description>
+        <pubDate>Sun, 14 Sep 2014 00:00:00 -0500</pubDate>
+        <link>http://yourdomain.com/2014/09/14/hexo-to-github-deploy-guide.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2014/09/14/hexo-to-github-deploy-guide.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>VirtualBox Headless on Ubuntu 12/14</title>
+        <description>&lt;p&gt;Today we are showing you how to install and run &lt;a href=&quot;https://www.virtualbox.org/&quot;&gt;VirtualBox&lt;/a&gt; in a headless environment. This is perfect for use on a server or even on a desktop where you would rather work from the command line. For this guide we will be using Ubuntu 12/14. The commands will be the same for RHEL/Centos/Arch once you get passed the actual installation process.&lt;/p&gt;
+
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;/h2&gt;
+
+&lt;p&gt;For Ubuntu 12 you would add the following line to &lt;code&gt;/etc/apt/sources.list&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;deb http://download.virtualbox.org/virtualbox/debian precise contrib
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For Ubuntu 14 add the following entry:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;deb http://download.virtualbox.org/virtualbox/debian trusty contrib
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we need to add the Virtualbox public key to our server. Regardless of your Ubuntu version you can do so with the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wget -q http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc -O- | sudo apt-key add -
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we have the key added and the appropriate updates to our sources list, let’s go ahead and update everything and install the needed packages:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo apt-get update
+sudo apt-get install linux-headers-$(uname -r) build-essential virtualbox-4.3 dkms
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We’ll also need to install the appropriate extension pack now. Go to the &lt;a href=&quot;http://www.virtualbox.org/wiki/Downloads&quot;&gt;VirtualBox Downloads page&lt;/a&gt;, and you will find a link to the following extension pack:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo VBoxManage extpack install Oracle_VM_VirtualBox_Extension_Pack-4.3.14-95030.vbox-extpack
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If everything went well we can now create our Virtual machine.  Virtualbox also supports OSTypes to make the installation a bit less painful. You can see all the OS types with the command &lt;code&gt;VBoxManage list ostypes&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage list ostypes|grep Arch
+ID:          ArchLinux
+Description: Arch Linux (32 bit)
+ID:          ArchLinux_64
+Description: Arch Linux (64 bit)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;For this guide I am creating a 64bit Arch Linux VM with a 32GB hard drive and 1GB of Ram. I am setting a variable for the VM name as I would like to be able to script this later and having a consistent naming convention helps me a lot. I’m going to go through each command and explain what we are doing here:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VM=&#39;Arch-64bit&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Step 1: Setting the variable, this one is pretty self explanatory.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage createvm --name $VM --ostype &quot;ArchLinux_64&quot; --register
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Step 2: Creating the actual Virtual machine and registering the Operating System type&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage createhd --filename ~/VMs/$VM.vdi --size 32768
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Step 3: Creating the virtual hard drive and storing it in our $HOME/VMs directory. This will also name the hard drive Arch-64bit.vdi for easier tracking.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage modifyvm $VM --memory 1024 --acpi on --boot1 dvd --nic1 bridged --bridgeadapter1 eth0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Step 4: We are adjusting the settings of our new VM. We are setting the RAM, first boot device and Ethernet Adapter&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage storagectl $VM --name &quot;IDE Controller&quot; --add ide
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Step 5: Creating a new IDE controller so that we can attach a Hard Drive and DVD drive for the install&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage storageattach $VM --storagectl &quot;IDE Controller&quot; --port 0 --device 0 --type hdd --medium ~/VMs/$VM.vdi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Step 6: We are assigning the hard drive to the first IDE slot&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage storageattach $VM --storagectl &quot;IDE Controller&quot; --port 1 --device 0 --type dvddrive --medium ~/ISO\ Storage/archlinux-2014.08.01-dual.iso
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Step 7: Now we are attaching the DVD drive to the second IDE slot.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxHeadless --startvm $VM
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Step 8: Profit? Okay maybe not..but this command will start the Virtual Machine and launch an RDP session so that you can complete the installation process. I know using RDP to install Arch makes the brain hurt a bit, but the whole process is actually quite painless. If you are new to installing Arch, check out this &lt;a href=&quot;http://lifehacker.com/5680453/build-a-killer-customized-arch-linux-installation-and-learn-all-about-linux-in-the-process&quot;&gt;Guide from Lifehacker&lt;/a&gt; that walks you through the process.&lt;/p&gt;
+
+&lt;p&gt;{&amp;lt;1&amp;gt;}&lt;img src=&quot;https://dl.dropboxusercontent.com/u/131462/Images/rdp-arch.png&quot; alt=&quot;RDP Connection to Arch VM&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Once you have installed your Virtual Machine go ahead and close out of the RDP session and then power off the VM and detach the ISO:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxManage controlvm $VM poweroff
+VBoxManage storageattach $VM --storagectl &quot;IDE Controller&quot; --port 1 --device 0 --type dvddrive --medium none
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To start the Virtual Machine up without the RDP session you would issue the following command:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;VBoxHeadless --startvm $VM --vrde off &amp;amp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To make it easier to start and stop the VM’s at boot I also created an init file that you can see &lt;a href=&quot;https://gist.github.com/greyhound-forty/aeb98cb4473a09be3fe3&quot;&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;With this guide we have just scratched the surface of what you can do with Vboxmanage/VboxHeadless, for a more complete list of what you can do see the &lt;a href=&quot;https://www.virtualbox.org/manual/ch08.html&quot;&gt;official docs&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 10 Sep 2014 00:00:00 -0500</pubDate>
+        <link>http://yourdomain.com/2014/09/10/virtualbox-headless-on-ubuntu-1214.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2014/09/10/virtualbox-headless-on-ubuntu-1214.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Server Monitoring with Uptime and Supervisord</title>
+        <description>&lt;h3 id=&quot;introduction&quot;&gt;Introduction&lt;/h3&gt;
+
+&lt;p&gt;While there are certainly no shortage of website/server monitoring utilities around these days, utilities like &lt;a href=&quot;http://www.nagios.org/&quot;&gt;Nagios&lt;/a&gt; or &lt;a href=&quot;http://www.zabbix.com/&quot;&gt;Zabbix&lt;/a&gt; are often complex to set up for new users that simply want to be alerted when their site or service is down. Today I’ll be setting up &lt;a href=&quot;http://redotheweb.com/uptime/&quot;&gt;Uptime&lt;/a&gt;, a node.js and mongodb powered monitoring application. Here are some of the benefits of Uptime:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Monitor thousands of websites (powered by Node.js asynchronous programming)&lt;/li&gt;
+  &lt;li&gt;Record availability statistics for further reporting (powered by MongoDB)&lt;/li&gt;
+  &lt;li&gt;Get details about failed checks (HTTP error code, etc.)&lt;/li&gt;
+  &lt;li&gt;Complete API for integration with third-party monitoring services&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you want to see it in action you can watch a quick demo on &lt;a href=&quot;https://vimeo.com/39302164&quot;&gt;Vimeo&lt;/a&gt;. While the video shows the install it skips some of the actual configuration steps needed to get it up and running quickly on your server such as the install of node.js and setting up mongodb.&lt;/p&gt;
+
+&lt;h3 id=&quot;installation-and-configuration&quot;&gt;Installation and configuration&lt;/h3&gt;
+
+&lt;p&gt;First we need to install the needed applications for Uptime to run properly. For this we will need some basic development packages as well as the latest version of &lt;a href=&quot;http://nodejs.org/&quot;&gt;Node.js&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt-get update
+apt-get install gcc make g++ git python-software-properties -y
+apt-add-repository ppa:chris-lea/node.js -y
+apt-get update
+apt-get install nodejs -y
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Additionally you’ll need MongoDB. The one that comes with the default install of Ubuntu 12 seemed woefully out of date so I installed the latest version using the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+echo &quot;deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen&quot; | tee -a /etc/apt/sources.list.d/10gen.list
+apt-get -y update
+apt-get -y install mongodb-10gen
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;I am putting my uptime app in /var/www so you may need to adjust your commands depending on the path that you want to run it from. Let’s clone the uptime project to our system and install it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /var/www
+git clone git://github.com/fzaninotto/uptime.git
+cd uptime
+npm install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we attempt to start Uptime now it will fail out because we need to create a MongoDB user and assign it a password and role. For this guide I am using MongoDB 2.4. If you are using 2.6 see &lt;a href=&quot;http://docs.mongodb.org/manual/tutorial/add-user-to-database/&quot;&gt;this guide&lt;/a&gt; for how to create a new user as the syntax has changed. To drop in to the mongodb shell just type in &lt;code&gt;mongo&lt;/code&gt; and then switch to the uptime database that was created when you installed the app:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;use uptime
+db.addUser({ user:&quot;uptime&quot;, pwd:&quot;gallifrey&quot;, roles:[&quot;readWrite&quot;] })
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now it is time to make sure that our user is properly assigned:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+[root@hyperion ~ ] # mongo  
+MongoDB shell version: 2.4.9  
+connecting to: test  
+&amp;gt; use uptime  
+switched to db uptime  
+&amp;gt; show users  
+{  
+        &quot;_id&quot; : ObjectId(&quot;53ece0a0a33f66451a56e86c&quot;),  
+        &quot;user&quot; : &quot;uptime&quot;,  
+        &quot;pwd&quot; : &quot;51b70f4d284218eb962c10b8269c352d&quot;,  
+        &quot;roles&quot; : [  
+                &quot;readWrite&quot;  
+        ]  
+}  
+&amp;gt; exit  
+bye  
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that we have the user created, we need to adjst the configuration file &lt;code&gt;/var/www/uptime/config/default.yaml&lt;/code&gt; with the username and password. Here is what the updated mongodb part of the configuration file will look like:&lt;/p&gt;
+
+&lt;p&gt;```
+url: ‘http://localhost:8082’&lt;/p&gt;
+
+&lt;p&gt;mongodb:
+  server:   localhost
+  database: uptime
+  user:     uptime
+  password: gallifrey
+  connectionString:       # alternative to setting server, database, user and password separately
+```&lt;/p&gt;
+
+&lt;p&gt;By default uptime is not secure, and anyone that can get to your hostname or IP can see your healthchecks. To get around this let’s update the authorization section as follows (obviously you should use a noce secure password and not tardis):&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+basicAuth:
+  username:    uptime_admin
+  password:    tardis
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;After we make this change we also need to uncomment the basicAuth plugin line in the default.yaml&lt;/p&gt;
+
+&lt;p&gt;```
+[hyperion ~ ] #grep ‘plugins/basicAuth’ /var/www/uptime/config/default.yaml
+  # - ./plugins/basicAuth&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;[hyperion ~ ] # sed -i ‘s&lt;/td&gt;
+      &lt;td&gt;# - ./plugins/basicAuth&lt;/td&gt;
+      &lt;td&gt;- ./plugins/basicAuth&lt;/td&gt;
+      &lt;td&gt;’ /var/www/uptime/config/default.yaml&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;[hyperion ~ ] # grep ‘plugins/basicAuth’ /var/www/uptime/config/default.yaml
+  - ./plugins/basicAuth&lt;/p&gt;
+
+&lt;p&gt;```&lt;/p&gt;
+
+&lt;p&gt;It is time to test that we’ve got everything set up correctly by starting the app:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /var/www/uptime/
+node app.js
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If everything starts as expected you will get a lot of console output. You should now visit &lt;code&gt;http://x.x.x.x:8082&lt;/code&gt;, where x.x.x.x is the IP of the server you are running this on. If you are testing this on a local system you can also use &lt;code&gt;http://localhost:8082&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;{&amp;lt;1&amp;gt;}&lt;img src=&quot;https://dl.dropboxusercontent.com/u/131462/Images/uptime1.png&quot; alt=&quot;Uptime Initial Screen&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;You can now start setting up your uptime checks. I’m not going to go over that aspect of the process here, but you can find more information on the &lt;a href=&quot;http://redotheweb.com/uptime/&quot;&gt;Uptime Project Page&lt;/a&gt;, the &lt;a href=&quot;https://github.com/fzaninotto/uptime&quot;&gt;Uptime Github page&lt;/a&gt; or this &lt;a href=&quot;https://groups.google.com/forum/#!forum/node-uptime&quot;&gt;Google Group&lt;/a&gt; dedicated to uptime.&lt;/p&gt;
+
+&lt;h3 id=&quot;adding-process-control&quot;&gt;Adding process control&lt;/h3&gt;
+
+&lt;p&gt;If we don’t fork the process to the background it will end as soon as we terminate our session or reboot the machine. This is where Supervisord comes in. &lt;a href=&quot;http://supervisord.org/&quot;&gt;Supervisord&lt;/a&gt; is a process monitoring control system that allows for the starting of processes at boot and can also restart services if they die unexpectedly.&lt;/p&gt;
+
+&lt;p&gt;Any files found in /etc/supervisor/conf.d ending in .conf will be read by Supervisor. Use your favorite text editor and create a uptime.conf file that has the following:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+[program:uptime]
+command = node /var/www/uptime/app.js
+directory = /var/www/uptime
+user = root
+autostart = true
+autorestart = true
+stdout_logfile = /var/log/supervisor/uptime.log
+stderr_logfile = /var/log/supervisor/uptime_err.log
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;We now need to reread the supervisor conf.d directory, update the process monitor, and start our service:&lt;/p&gt;
+
+&lt;p&gt;```
+[hyperion ~ ] # supervisorctl reread
+uptime: available&lt;/p&gt;
+
+&lt;p&gt;[hyperion ~ ] # supervisorctl update
+uptime: added process group&lt;/p&gt;
+
+&lt;p&gt;[hyperion ~ ] # supervisorctl start uptime
+uptime: started
+```&lt;/p&gt;
+
+&lt;p&gt;If all goes well you can again visit &lt;code&gt;http://x.x.x.x:8082&lt;/code&gt; or &lt;code&gt;http://localhost:8082&lt;/code&gt; and start setting our health checks. Happy Monitoring!!&lt;/p&gt;
+
+</description>
+        <pubDate>Thu, 28 Aug 2014 00:00:00 -0500</pubDate>
+        <link>http://yourdomain.com/2014/08/28/server-monitoring-with-uptime-and-supervisord.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2014/08/28/server-monitoring-with-uptime-and-supervisord.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Persistent Ghost with Supervisor</title>
+        <description>&lt;p&gt;I love trying out new blogging services and while they are usually maintained for only a short period of time that is more of a failing on my part and less on the actual technology. My current favorite for self-hosted blogging is &lt;a href=&quot;https://ghost.org/&quot;&gt;Ghost&lt;/a&gt;. By default if you start Ghost using the command line it will stop whenever you are closing the terminal window or log out from your current SSH session. To get around this limitation we will be using &lt;a href=&quot;http://supervisord.org/&quot;&gt;Supervisor&lt;/a&gt;. In this guide I am using an Ubuntu 14 server but this has been tested on 12 and works without issue. Now that we have the diatribe out of the way, let’s begin:&lt;/p&gt;
+
+&lt;p&gt;Our first step is of course to make sure that our system is up to date and to install the supervisor package&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apt-get update
+apt-get install supervisor -y
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we have installed Supervisor we need to make sure it starts.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;service supervisor start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If all goes well you should have Supervisor up and running. The main configuration file for Supervisor is located at &lt;code&gt;/etc/supervisor/supervisord.conf&lt;/code&gt; but Supervisor also includes a conf.d directory to store the individual program files:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[include]
+files = /etc/supervisor/conf.d/*.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Any files found in &lt;code&gt;/etc/supervisor/conf.d&lt;/code&gt; ending in .conf will be read by Supervisor. Use your favorite text editor and create a ghost.conf:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;nano -w /etc/supervisor/conf.d/ghost.conf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here is my ghost.conf:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+[program:ghost]
+command = node /var/ghost/index.js
+directory = /var/ghost
+user = ghost
+autostart = true
+autorestart = true
+stdout_logfile = /var/log/supervisor/ghost.log
+stderr_logfile = /var/log/supervisor/ghost_err.log
+environment = NODE_ENV=&quot;production&quot;
+&lt;/code&gt;
+As you can see from the file I have ghost running from &lt;code&gt;/var/ghost&lt;/code&gt; so you’ll need to adjust this to fit your specific needs if you have ghost running from another directory&lt;/p&gt;
+
+&lt;p&gt;Now we need to reread the &lt;code&gt;/etc/supervisor/conf.d&lt;/code&gt; directory to pick up the new configuration file and update the Supervisor process monitor&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;supervisorctl reread
+supervisorctl update
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the service reloads let’s go ahead and start up the ghost script&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;supervisorctl start ghost
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can check the status of any running supervisor script by executing &lt;code&gt;supervisorctl status&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+root@ghost:~# supervisorctl status
+ghost                            RUNNING    pid 7324, uptime 0:06:38
+&lt;/code&gt;&lt;/p&gt;
+</description>
+        <pubDate>Tue, 26 Aug 2014 09:45:00 -0500</pubDate>
+        <link>http://yourdomain.com/2014/08/26/persistent-ghost-with-supervisor.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2014/08/26/persistent-ghost-with-supervisor.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>New Ubuntu Server Setup 12/14</title>
+        <description>&lt;p&gt;This is a quick bash script that I use on new deployments of Ubuntu server 12 or 14. The script does the following:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Changes the default SSH port to a random 4 digit number Create a new user named user if they do not already exist on the system&lt;br /&gt;
+Assigns a 12 character, randomly generated password for the new user&lt;br /&gt;
+Changes root login to only be allowed if using SSH keys&lt;br /&gt;
+Installs the base packages needed for a jekyll server&lt;br /&gt;
+Emails all the new server information to your email and then restarts the server&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env bash
+
+dt=$(date +&quot;%b-%d-%y&quot;)
+pass=$(&amp;lt; /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c12; echo)
+ips=$(ifconfig|grep inet\ addr|awk &#39;{print $2}&#39;|cut -d &#39;:&#39; -f2|grep -v 127.0.0.1)
+hst=$(hostname -f)
+ssh_port=$(&amp;lt; /dev/urandom tr -dc 1-9 | head -c4)
+provision_log=&quot;/root/provision.${dt}.log&quot;
+os=$(lsb_release -i -r)
+
+base_install () {
+{
+   echo -e &quot;Post install details for server $hst\n&quot;;
+   echo -e &quot;Provision date: $dt\n&quot;;
+   echo -e &quot;OS: $os\n&quot;;
+   echo -e &quot;Server IPs:\n$ips\n&quot;;
+   echo -e &quot;Password for user user: $pass\n&quot;;
+   echo -e &quot;New ssh port: $ssh_port\n&quot;;
+
+} &amp;gt;&amp;gt; &quot;$provision_log&quot; 2&amp;gt;&amp;amp;1
+
+if ! grep -q ryan /etc/passwd;
+  then useradd -m -g users -G wheel -s /bin/bash user &amp;gt;&amp;gt; &quot;$provision_log&quot; 2&amp;gt;&amp;amp;1 ; echo user:&quot;$pass&quot; | chpasswd &amp;gt;&amp;gt; &quot;$provision_log&quot; 2&amp;gt;&amp;amp;1;
+fi  
+
+apt-get update
+apt-get install sudo wget jwhois lsof nano curl sendmail mailutils git python-software-properties -y
+apt-add-repository ppa:chris-lea/node.js -y
+apt-get update
+apt-get install nodejs -y
+
+echo &quot;nodejs version $(node -v)&quot; &amp;gt;&amp;gt; &quot;$provision_log&quot; 2&amp;gt;&amp;amp;1
+
+ssh-keygen -t rsa -P &#39;&#39; -f &quot;$HOME&quot;/.ssh/id_rsa
+sudo su - ryan -c &quot;ssh-keygen -t rsa -P &#39;&#39; -f /home/user/.ssh/id_rsa&quot;
+}
+
+### Grab Base Configuration Files
+configure_system() {
+git clone https://github.com/greyhound-forty/Configuration-Files.git
+mv {,original}.bashrc
+mv /home/ryan/{,original}.bashrc
+cp &quot;$HOME&quot;/Configuration-Files/Bash/.bashrc &quot;$HOME&quot;
+cp &quot;$HOME&quot;/Configuration-Files/Bash/.bashrc /home/user
+cp &quot;$HOME&quot;/Configuration-Files/Bash/.bash-config &quot;$HOME&quot;
+cp &quot;$HOME&quot;/Configuration-Files/Bash/.bash-config /home/user
+
+mv /etc/sudoers{,.bak}
+
+cp &quot;$HOME&quot;/Configuration-Files/Server/sudoers /etc/sudoers
+chmod 0440 /etc/sudoers
+
+cp &quot;$HOME&quot;/Configuration-Files/Server/authorized_keys &quot;$HOME&quot;/.ssh/authorized_keys
+cp &quot;$HOME&quot;/Configuration-Files/Server/authorized_keys /home/user/.ssh/authorized_keys
+
+mv /etc/ssh/sshd_config{,.bak}
+cp &quot;$HOME&quot;/Configuration-Files/Server/sshd_config /etc/ssh/sshd_config
+
+/bin/sed -ie &quot;s|#Port 22|Port ${ssh_port}|&quot; /etc/ssh/sshd_config
+/bin/sed -ie &quot;s|#PermitRootLogin no|PermitRootLogin without-password|g&quot; /etc/ssh/sshd_config
+}
+
+
+install_jekyll() {
+        curl -L https://get.rvm.io | bash -s stable
+        source /etc/profile.d/rvm.sh
+        rvm requirements
+        rvm install ruby
+        rvm use ruby --default
+        rvm rubygems current
+        gem install jekyll sinatra thin json
+}
+
+base_install
+configure_system
+install_jekyll
+
+
+mail -s &quot;New Server Provision&quot; user@email.com &amp;lt; &quot;$provision_log&quot; &amp;amp;&amp;amp; shutdown -r now
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        <pubDate>Mon, 25 Aug 2014 08:29:00 -0500</pubDate>
+        <link>http://yourdomain.com/2014/08/25/new-ubuntu-server-setup-1214.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2014/08/25/new-ubuntu-server-setup-1214.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Universal Installer Rev. 1</title>
+        <description>&lt;p&gt;This is an attempt at a universal installer script in bash. The goal of the script is to determine the underlying OS and then run a set of functions based on the specific operating system. This is very much a version 1 type of script that I will be tweaking in later posts:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env bash
+#set -o nounset
+#set -o errexit
+
+############ [ VARIABLES ] ############
+dt=$(date +&quot;%b-%d-%y&quot;)
+d_dir=&quot;$HOME/Deployment&quot;
+hst=$(hostname)
+#######################################
+
+if [ ! -d &quot;$d_dir&quot; ]
+then
+mkdir -p &quot;$d_dir&quot;
+fi
+
+# Start logging
+echo &quot;Server Post Provisioning Results:&quot;$&#39;\n&#39; &amp;gt; &quot;$dt.$hst.log&quot;
+
+os() {
+if [ -e /etc/redhat-release ]
+  then
+    os=&quot;centos&quot;
+elif [ -e /etc/lsb-release ]
+  then
+   os=&quot;ubuntu&quot;
+elif [ -e /etc/arch-release ]
+  then
+    os=&quot;arch&quot;
+elif [ -e /var/log/installer/lsb-release ]
+  then
+    os=&quot;debian&quot;
+fi
+}
+
+base_setup() {
+  case &quot;$os&quot; in
+    &quot;Centos&quot; | &quot;centos&quot; )
+        os_ver=$(cat /etc/redhat-release)
+        echo &quot;$os_ver&quot; &amp;gt;&amp;gt; &quot;$dt.$hst.log&quot;
+        yum update -y &amp;amp;&amp;amp; yum upgrade -y
+        yum install screen curl wget jwhois bind-utils samba samba-client make gcc git -y
+  ;;
+    &quot;Ubuntu&quot; | &quot;ubuntu&quot; )
+        os_ver=$(lsb_release -r|grep Release|awk &#39;{print $2}&#39;|cut -d &#39;.&#39; -f1)
+        echo &quot;System is running Ubuntu &#39;$os_ver&#39;&quot; &amp;gt;&amp;gt; &quot;$dt.$hst.log&quot;
+        apt-get update &amp;amp;&amp;amp; apt-get upgrade -y &amp;amp;&amp;amp; apt-get install curl git -y
+  ;;
+    &quot;Arch&quot; | &quot;arch&quot; )
+        os_ver=$(cat &amp;lt; /etc/issue|awk &#39;{print $1,$2 }&#39;)
+        echo &quot;$os_ver&quot; &amp;gt;&amp;gt; &quot;$dt.$hst.log&quot;
+        pacman -Syu --noconfirm
+        pacman -S screen curl git wget fakeroot make gcc python dnsutils --noconfirm
+  ;;
+    &quot;Debian&quot; | &quot;debian&quot; )
+        os_ver=$(cat /etc/debian_version)
+        echo &quot;$os_ver&quot; &amp;gt;&amp;gt; &quot;$dt.$hst.log&quot;
+        apt-get update &amp;amp;&amp;amp; apt-get upgrade -y
+        apt-get install screen sudo wget jwhois git lsof nano curl sendmail mailutils -y
+  ;;
+  esac
+}
+
+## Grab all needed files from github
+grab_files() {
+    cd &quot;$d_dir&quot;
+    git clone https://github.com/greyhound-forty/Post_Install.git
+    git clone https://github.com/greyhound-forty/Configuration-Files.git
+}
+
+update_system() {
+  case &quot;$os_ver&quot; in
+    &quot;Centos&quot; | &quot;centos&quot; )
+        chmod +x &quot;$d_dir/Post_Install/centos-6-post-install-script.sh&quot;
+        screen -S Centos -d -m /bin/bash &quot;$d_dir/Post_Install/centos-6-post-install-script.sh&quot;
+  ;;
+    &quot;12&quot; )
+        chmod +x &quot;$d_dir/Post_Install/ubuntu-12-post-install-script.sh&quot;
+        echo &quot;screen -S testing -d -m /bin/bash &#39;$d_dir/Post_Install/ubuntu-12-post-install-script.sh&#39;&quot; &amp;gt;&amp;gt; &quot;$dt.$hst.log&quot;
+  ;;
+    &quot;14&quot; )
+        chmod +x &quot;$d_dir/Post_Install/ubuntu-14-post-install-script.sh&quot;
+        echo &quot;screen -S testing -d -m /bin/bash &#39;$d_dir/Post_Install/ubuntu-14-post-install-script.sh&#39;&quot; &amp;gt;&amp;gt; &quot;$dt.$hst.log&quot;
+  ;;
+    &quot;Debian&quot; | &quot;debian&quot; )
+        chmod +x &quot;$d_dir/Post_Install/debian-7-post-install-script.sh&quot;
+        screen -S testing -d -m /bin/bash &quot;$d_dir/Post_Install/debian-7-post-install-script.sh&quot;
+  ;;
+    &quot;Arch&quot; | &quot;arch&quot; )
+        chmod +x &quot;$d_dir/Post_Install/arch-post-install-script.sh&quot;
+        screen -S Arch -d -m /bin/bash &quot;$d_dir/Post_Install/arch-post-install-script.sh&quot;
+  ;;
+  esac
+}
+
+os;
+base_setup;
+grab_files;
+update_system;
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+        <pubDate>Sun, 24 Aug 2014 08:31:00 -0500</pubDate>
+        <link>http://yourdomain.com/2014/08/24/universal-installer-rev-1.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2014/08/24/universal-installer-rev-1.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Moving Mysql to a new partition in cPanel</title>
+        <description>&lt;p&gt;I’ve had to deal with quiet a few clients who have filled up their /var partition due to mysql being stored by default on a small partition. This is a short little guide on how to move mysql to another parition on the system.&lt;/p&gt;
+
+&lt;p&gt;The nice thing about this method is that it requires no mucking with the my.cnf file. Additionally if the stock-default MySQL data directory is retained via a symlink, this still allows for the directory contents to be saved when WHM runs its backup utility.&lt;/p&gt;
+
+&lt;p&gt;First we need to tell cPanel not to monitor/manage Mysql so that it does not try to restart the service while we are moving our data. To do this log in to WHM » Main » Service Configuration » Service Manager and disable mysql. Once that is complete here are the commands to safely move Mysql to a new, larger partition (in this example I am moving mysql to the mount point /newvar):&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;service mysql stop  
+mkdir -p /newvar  
+mount /dev/xvdc1 /newvar  
+cp -r /var/lib/mysql/ /newvar/  
+mkdir -p /newvar/mysql/backupmysql/  
+mv -v /var/lib/mysql/* /newvar/mysql/backupmysql/  
+chown -R mysql:mysql /newvar/mysql/  
+rm -rf /var/lib/mysql/  
+ln -s /newvar/mysql /var/lib/mysql  
+rm -rf /tmp/mysql.sock  
+ln -s /newvar/mysql/mysql.sock /tmp/mysql.sock&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that we’ve moved everything we need to log back in to WHM and re-enable mysql. To do this we log in and go to Main » Service Configuration » Service Manager and enable mysql. Once the service is re-enabled let’s test it to make sure everything starts back up properly. You can do so with the following command:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;/scripts/restartsrv mysql&lt;/code&gt;&lt;/p&gt;
+</description>
+        <pubDate>Thu, 21 Aug 2014 08:25:00 -0500</pubDate>
+        <link>http://yourdomain.com/2014/08/21/moving-mysql-to-a-new-partition-in-cpanel.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2014/08/21/moving-mysql-to-a-new-partition-in-cpanel.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Securing Ubuntu Server 12/14 - Initial Setup</title>
+        <description>&lt;p&gt;Most VPS provider provide root login via SSH when the instance is initially provisioned. For obvious reasons we want to turn that off. I recommend having 2 terminal sessions open while doing your initial security update, in case you end up locking yourself out.&lt;/p&gt;
+
+&lt;p&gt;For those of you whose instances are provisioned with a user other than root, you have most likely been granted sudo access. If that is the case you can skip this bit:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# useradd -m -g users -G sudo -s /bin/bash newuser  
+:~# passwd newuser  
+:~# EDITOR=nano visudo // yes I prefer nano
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With our new sudo user created we can start updating our SSH configuration. As someone that works in tech support I am paranoid about obliterating configuration files. So for my sanity I will create a backup&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# cp -v /etc/ssh/sshd_config{,.bak}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now let’s check the PermitRootLogin and Port entry in our config file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# egrep &#39;PermitRootLogin|Port&#39; /etc/ssh/sshd_config
+Port 22  
+PermitRootLogin yes  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now you can use your favorite editor to update the file but why not make life easier on yourself with sed:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# sed -i &#39;s|Port 22|Port 3322|g&#39; /etc/ssh/sshd_config  
+:~# sed -i &#39;s|PermitRootLogin yes|PermitRootLogin no|g&#39; /etc/ssh/sshd_config
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Time to set up our initial firewall rules&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt;&amp;gt; Run as root or use sudo  
+:~# sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT  
+:~# sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT  
+:~# sudo iptables -A INPUT -p tcp --dport 3322 -j ACCEPT  
+:~# sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT  
+:~# sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT  
+:~# sudo iptables -A INPUT -j DROP
+:~# sudo iptables -I INPUT 1 -i lo -j ACCEPT  
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Let’s check on our rules before we save them just to make sure we’ll be able to get back in&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# root@ubuntu:~# iptables -nL
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0
+ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:3322
+ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:80
+ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:443
+DROP       all  --  0.0.0.0/0            0.0.0.0/0
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To ensure our firewall rules are saved through restarts we’ll install and use iptables-persistent&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# sudo apt-get install -y iptables-persistent  
+:~# sudo service iptables-persistent start
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we can take our login a step further by setting up SSH keys. On our local machine we can generate our SSH keys for the newuser, since this is how we will be accessing the server after reboot. If your local system is linux you can use ssh-keygen to generate the key pair. If your local machine is Windows see this &lt;a href=&quot;http://sshcontrol.com/help/puttygen_keys&quot;&gt;guide&lt;/a&gt; for generating and using SSH keys:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;root@vbox:~# ssh-keygen -t rsa -C &quot;vboxhost&quot;
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+/root/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase):    // # I&#39;d highly recommend passphrases
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+ac:db:b4:ce:ee:dc:e5:99:64:1d:a7:69:11:7a:ad:3b vboxhost
+The key&#39;s randomart image is:
++--[ RSA 2048]----+
+|                 |
+|                 |
+|              .  |
+|       .     . o |
+|        S   . + o|
+|       .     o B |
+|      . .   + *  |
+|       * o = +E. |
+|      .+O . + .. |
++-----------------+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As this is is our first key we’ll use the defaults. As noted above I would highly recommend providing a pass-phrase. If someone manages to get your key then the pass-phrase provides an extra barrier to entry. By default your keys are stored in $HOME/.ssh. To get the new key to the remote server we’ll be using the ssh-copy-id utility. This tool lets you copy a public key to a server when you are still using password based login. This is why we did not start the ssh service after our changes earlier.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# root@vbox:~# ssh-copy-id newuser@192.168.1.68
+The authenticity of host &#39;192.168.1.68 (192.168.1.68)&#39; can&#39;t be established.
+ECDSA key fingerprint is c1:09:ed:e8:20:66:fa:c7:5c:fc:2b:21:ec:5d:5f:eb.
+Are you sure you want to continue connecting (yes/no)? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+newuser@192.168.1.68&#39;s password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   &quot;ssh &#39;newuser@192.168.1.68&#39;&quot;
+and check to make sure that only the key(s) you wanted were added.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now let’s test that our keyworks before we reboot the instance. You will be prompted for your key passphrase unless you use a utility like ssh-agent which I’ll discuss in part 2 of this guide:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# root@vbox:~# ssh &#39;newuser@192.168.1.68&#39;
+Enter passphrase for key &#39;/root/.ssh/id_rsa&#39;:
+Welcome to Ubuntu 12.04.4 LTS (GNU/Linux 3.2.0-61-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+newuser@ubuntu:~$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now it is time to cross your fingers and reboot. Once the system is back online we’ll add a few more things to help secure our server:&lt;/p&gt;
+
+&lt;h2 id=&quot;ssh-agent&quot;&gt;SSH-Agent&lt;/h2&gt;
+
+&lt;p&gt;Before we go further however I would like to mention SSH-Agent. This little utility does you a favor by managing your SSH keys for you. This is helpful when you have assigned a passphrase to your SSH key. With this tool you enter the passphrase once, and after that, ssh-agent keeps your key in its memory and pulls it up whenever it is needed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# ssh-agent
+SSH_AUTH_SOCK=/tmp/ssh-tBYKKVasWnft/agent.14140; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=14141; export SSH_AGENT_PID;
+echo Agent pid 14141;
+
+:~# eval `ssh-agent -s`
+Agent pid 14144
+
+:~# ssh-add ~/.ssh/id_rsa
+Enter passphrase for /root/.ssh/id_rsa:
+Identity added: /root/.ssh/id_rsa (/root/.ssh/id_rsa)
+
+:~# ssh newuser@192.168.1.68
+Welcome to Ubuntu 12.04.4 LTS (GNU/Linux 3.2.0-61-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+Last login: Thu May 22 18:55:34 2014 from 192.168.1.68.static.local
+newuser@ubuntu:~$
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see we no longer need to provide our passphrase when ssh-ing in to our new server. You can also use the command &lt;code&gt;ssh-add -l&lt;/code&gt; to look at your currently loaded keys.&lt;/p&gt;
+
+&lt;p&gt;Now that we can easily get back in to our box let’s continue plugging some holes.&lt;/p&gt;
+
+&lt;h2 id=&quot;devshm&quot;&gt;/dev/shm&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;/dev/shm&lt;/code&gt; mount can be used in an attack against a running service, such as httpd or nginx. To get around this we will modify /etc/fstab to make it more secure. Add the following to the bottom of the fstab file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tmpfs     /dev/shm     tmpfs     defaults,noexec,nosuid     0     0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;fail2ban&quot;&gt;Fail2ban&lt;/h2&gt;
+
+&lt;p&gt;The Fail2ban program scans your servers log files and bans IPs that look malicious. Examples of malicious activity would include things like; too many password failures, probing for exploits, etc.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# sudo apt-get install fail2ban
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After the install open up the /etc/fail2ban/jail.conf file for editing - Find this line - how to tell which line&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# egrep -n -i &#39;# Jails&#39; /etc/fail2ban/jail.conf  
+78:# JAILS
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Delete everything beneath that line and replace it with the content below and save. If you’re using nano/vi you can easily get to that spot with +N where N is the line number. In this case it would be &lt;code&gt;nano +78 /etc/fail2ban/jail.conf&lt;/code&gt; or &lt;code&gt;vi +78 /etc/fail2ban/jail.conf&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[ssh]
+
+enabled  = true
+port     = 3322
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 6
+
+[ssh-ddos]
+
+enabled  = true
+port     = 3322
+filter   = sshd-ddos
+logpath  = /var/log/auth.log
+maxretry = 10
+
+[recidive]
+
+enabled  = true
+filter   = recidive
+logpath  = /var/log/fail2ban.log
+action   = iptables-allports[name=recidive]
+       sendmail-whois-lines[name=recidive, logpath=/var/log/fail2ban.log]
+bantime  = 604800  ; 1 week
+findtime = 86400   ; 1 day
+maxretry = 5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can activate any services you would like fail2ban to monitor by changing enabled = false to enabled = true in the configuration file. You can also create rule filters for various services that are not monitored by default with fail2ban. This is done with the help of the &lt;code&gt;/etc/fail2ban/jail.local&lt;/code&gt; file. Check out &lt;a href=&quot;https://www.digitalocean.com/community/articles/how-to-protect-ssh-with-fail2ban-on-ubuntu-12-04&quot;&gt;this Digital Ocean guide&lt;/a&gt; for more information on using the jail.local file.&lt;/p&gt;
+
+&lt;p&gt;After we’re done configuring fail2ban we need to restart the service and check the status:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;:~# sudo service fail2ban restart  
+
+:~# sudo fail2ban-client status
+Status
+|- Number of jail:      1
+`- Jail list:           ssh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This completes our initial setup of our Ubuntu server. If you’d like to dive deeper in to securing your server check out the following guides:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.digitalocean.com/community/articles/how-to-install-and-use-bastille-to-harden-an-ubuntu-12-04&quot;&gt;Hardening Ubuntu with Bastille&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.andrewault.net/2010/05/17/securing-an-ubuntu-server/&quot;&gt;Securing Ubuntu with Tiger, PSAD, and more&lt;/a&gt;&lt;br /&gt;
+&lt;a href=&quot;http://www.thefanclub.co.za/how-to/how-secure-ubuntu-1204-lts-server-part-2-gui-installer-script&quot;&gt;Ubuntu Secure GUI installer script&lt;/a&gt;&lt;/p&gt;
+
+</description>
+        <pubDate>Mon, 18 Aug 2014 00:00:00 -0500</pubDate>
+        <link>http://yourdomain.com/2014/08/18/securing-ubuntu-server-1214---initial-setup.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2014/08/18/securing-ubuntu-server-1214---initial-setup.html</guid>
+        
+        
+      </item>
+    
+      <item>
+        <title>Introduction to LVM: Part Two</title>
+        <description>&lt;p&gt;If you need a refresher on where we are at this point please see &lt;a href=&quot;http://inchhighassassins.com/?page_id=24&quot;&gt;Part 1&lt;/a&gt; of our Introduction to LVM guide.&lt;/p&gt;
+
+&lt;p&gt;Now we have three logical volumes, but no actual filesystems so they won’t do us much good when trying to store data on them. We’ll create an ext3 filesystem on backup, an ext4 filesystem on nfs and a xfs filesystem on media&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mkfs.ext3 /dev/data/backup
+mke2fs 1.42 (29-Nov-2011)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+327680 inodes, 1310720 blocks
+65536 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=1342177280
+40 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks:
+        32768, 98304, 163840, 229376, 294912, 819200, 884736
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (32768 blocks): done
+Writing superblocks and filesystem accounting information: done
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mkfs.ext4 /dev/data/nfs
+mke2fs 1.42 (29-Nov-2011)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+Stride=0 blocks, Stripe width=0 blocks
+327680 inodes, 1310720 blocks
+65536 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=1342177280
+40 block groups
+32768 blocks per group, 32768 fragments per group
+8192 inodes per group
+Superblock backups stored on blocks:
+        32768, 98304, 163840, 229376, 294912, 819200, 884736
+
+Allocating group tables: done
+Writing inode tables: done
+Creating journal (32768 blocks): done
+Writing superblocks and filesystem accounting information: done
+
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mkfs.xfs /dev/data/media
+meta-data=/dev/data/media        isize=256    agcount=4, agsize=131072 blks
+         =                       sectsz=512   attr=2, projid32bit=0
+data     =                       bsize=4096   blocks=524288, imaxpct=25
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we are ready to mount our logical volumes, so let’s create the mount points and get them all mounted:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mkdir -p /var/{media,backup,nfs}
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mount /dev/data/backup /var/backup
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mount /dev/data/nfs /var/nfs
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mount /dev/data/media /var/media
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mount |grep &#39;/var&#39;
+/dev/mapper/data-backup on /var/backup type ext3 (rw)
+/dev/mapper/data-nfs on /var/nfs type ext4 (rw)
+/dev/mapper/data-media on /var/media type xfs (rw)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now we have a functional LVM system and we can read and write to the newly mounted partitions. For the volumes to be mounted on boot of course we need to adjust our /etc/fstab file. First we’ll make a backup in case anything gets borked and we need to rescue the system from boot up issues:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; cp /etc/fstab{,.bak}
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; ll /etc/fstab*
+-rw-r--r-- 1 root root  767 Apr  1 08:38 /etc/fstab
+-rw-r--r-- 1 root root  767 Apr 10 08:49 /etc/fstab.bak
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we have a good backup we need to add the new mounts to the file. Using your favorite editor add the following entries to the /etc/fstab file:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/dev/data/backup   /var/backup     ext3       rw,noatime    0 0
+/dev/data/nfs    /var/nfs      ext4        rw,noatime    0 0
+/dev/data/media    /var/media      xfs   rw,noatime    0 0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;To test that we have everything done correctly we will now reboot. Execute the command &lt;code&gt;shutdown -r now&lt;/code&gt; to reboot the system.&lt;/p&gt;
+
+&lt;p&gt;Once the system is back online we can run &lt;code&gt;df -h&lt;/code&gt; or &lt;code&gt;mount&lt;/code&gt; to make sure that everything we added to the fstab file automatically mounted on boot up.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; df -h
+Filesystem                    Size  Used Avail Use% Mounted on
+/dev/mapper/telesto--vg-root   18G  1.5G   15G   9% /
+udev                          989M  4.0K  989M   1% /dev
+tmpfs                         200M  276K  200M   1% /run
+none                          5.0M     0  5.0M   0% /run/lock
+none                          998M     0  998M   0% /run/shm
+/dev/mapper/data-media        2.0G   33M  2.0G   2% /var/media
+/dev/sda1                     228M   54M  163M  25% /boot
+/dev/mapper/data-backup       5.0G  139M  4.6G   3% /var/backup
+/dev/mapper/data-nfs          4.8G   10M  4.6G   1% /var/nfs
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As I mentioned previously one of the real benefits of LVM is the ability to resize Logical volumes and now we can take that a step further and resize not only the volumes but their respective filesystems as well. The first volume we are going to deal with is our logical volume &lt;em&gt;backup&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;First we need to umount the volume&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; umount /var/backup
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mount|grep backup
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If the umount was successful you should get no outout from the &lt;code&gt;mount|grep backup&lt;/code&gt; command (provided you have no other mounts with the name backup in them).&lt;/p&gt;
+
+&lt;p&gt;Now let’s enlarge &lt;em&gt;backup&lt;/em&gt; from 5GB to 10GB&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; lvextend -L10GB /dev/data/backup
+  Extending logical volume backup to 10.00 GiB
+  Logical volume backup successfully resized
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This of course only enlarges the logical volume and not the filesystem. To enlarge the filesystem we need to use the commands &lt;code&gt;e2fsck&lt;/code&gt; and &lt;code&gt;resize2fs&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; e2fsck -f /dev/data/backup
+e2fsck 1.42 (29-Nov-2011)
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+/dev/data/backup: 11/327680 files (0.0% non-contiguous), 55935/1310720 blocks
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We need to make a note here about the total block amount (1310720) for when we shrink the volume later in this guide.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; resize2fs /dev/data/backup
+resize2fs 1.42 (29-Nov-2011)
+Resizing the filesystem on /dev/data/backup to 2621440 (4k) blocks.
+The filesystem on /dev/data/backup is now 2621440 blocks long.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now that we have successfully enlarged the logical volume &lt;em&gt;backup&lt;/em&gt; and resized the filesystem we will need to remount it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mount /dev/data/backup /var/backup
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; df -h
+Filesystem                    Size  Used Avail Use% Mounted on
+/dev/mapper/telesto--vg-root   18G  1.5G   15G   9% /
+udev                          989M  4.0K  989M   1% /dev
+tmpfs                         200M  276K  200M   1% /run
+none                          5.0M     0  5.0M   0% /run/lock
+none                          998M     0  998M   0% /run/shm
+/dev/mapper/data-media        2.0G   33M  2.0G   2% /var/media
+/dev/sda1                     228M   54M  163M  25% /boot
+/dev/mapper/data-nfs          4.8G   10M  4.6G   1% /var/nfs
+/dev/mapper/data-backup       9.9G  140M  9.3G   2% /var/backup
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;If we need to shrink a logical volume we actually need to work in the reverse order. The first step is to shrink the filesystem and then we can actually reduve the logical volume itself. Let’s pick on the &lt;em&gt;backup&lt;/em&gt; volume one more time. First step as always is to umount it:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; umount /var/backup
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; df -h
+Filesystem                    Size  Used Avail Use% Mounted on
+/dev/mapper/telesto--vg-root   18G  1.5G   15G   9% /
+udev                          989M  4.0K  989M   1% /dev
+tmpfs                         200M  276K  200M   1% /run
+none                          5.0M     0  5.0M   0% /run/lock
+none                          998M     0  998M   0% /run/shm
+/dev/mapper/data-media        2.0G   33M  2.0G   2% /var/media
+/dev/sda1                     228M   54M  163M  25% /boot
+/dev/mapper/data-nfs          4.8G   10M  4.6G   1% /var/nfs
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This is where we need that block number we saved from earlier. When you are resizing an ext3 filesystem to a specific size (instead of all available space) you need to specify the number of blocks. You can specify the size in MB,GB, etc but we already saves that block number so we’ll use that.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; resize2fs /dev/data/backup 1310720
+resize2fs 1.42 (29-Nov-2011)
+Resizing the filesystem on /dev/data/backup to 1310720 (4k) blocks.
+The filesystem on /dev/data/backup is now 1310720 blocks long.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With our filesystem size now reduced we need to use &lt;code&gt;lvreduce&lt;/code&gt; to shrink the logical volume as well. Note that this is a destructive process and you will be prompted to acknowledge this fact. Since we have not put any data on this filesystem we can safely ignore the warning&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; lvreduce -L5G /dev/data/backup
+  WARNING: Reducing active logical volume to 5.00 GiB
+  THIS MAY DESTROY YOUR DATA (filesystem etc.)
+Do you really want to reduce backup? [y/n]: y
+  Reducing logical volume backup to 5.00 GiB
+  Logical volume backup successfully resized
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;With all that done we can now remount the logical volume&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[telesto] (~) &amp;gt;&amp;gt;&amp;gt; mount /dev/data/backup /var/backup
+
+[telesto] (~) &amp;gt;&amp;gt;&amp;gt; df -h
+Filesystem                    Size  Used Avail Use% Mounted on
+/dev/mapper/telesto--vg-root   18G  1.5G   15G   9% /
+udev                          989M  4.0K  989M   1% /dev
+tmpfs                         200M  276K  200M   1% /run
+none                          5.0M     0  5.0M   0% /run/lock
+none                          998M     0  998M   0% /run/shm
+/dev/mapper/data-media        2.0G   33M  2.0G   2% /var/media
+/dev/sda1                     228M   54M  163M  25% /boot
+/dev/mapper/data-nfs          4.8G   10M  4.6G   1% /var/nfs
+/dev/mapper/data-backup       5.0G  139M  4.6G   3% /var/backup
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That completes part 2 of our Introduction to LVM series. In the next part of the series we will learn how to setup LVM and software Raid.&lt;/p&gt;
+
+</description>
+        <pubDate>Sat, 16 Aug 2014 00:00:00 -0500</pubDate>
+        <link>http://yourdomain.com/2014/08/16/introduction-to-lvm-part-two.html</link>
+        <guid isPermaLink="true">http://yourdomain.com/2014/08/16/introduction-to-lvm-part-two.html</guid>
+        
         
       </item>
     

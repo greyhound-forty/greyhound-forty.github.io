@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Server Monitoring with Uptime and Supervisord</title>
+  <meta name="description" content="Introduction">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://yourdomain.com/2014/08/28/server-monitoring-with-uptime-and-supervisord.html">
+  <link rel="alternate" type="application/rss+xml" title="tinybot" href="http://yourdomain.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">tinybot</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Server Monitoring with Uptime and Supervisord</h1>
+    <p class="post-meta">Aug 28, 2014</p>
+  </header>
+
+  <article class="post-content">
+    <h3 id="introduction">Introduction</h3>
+
+<p>While there are certainly no shortage of website/server monitoring utilities around these days, utilities like <a href="http://www.nagios.org/">Nagios</a> or <a href="http://www.zabbix.com/">Zabbix</a> are often complex to set up for new users that simply want to be alerted when their site or service is down. Today I’ll be setting up <a href="http://redotheweb.com/uptime/">Uptime</a>, a node.js and mongodb powered monitoring application. Here are some of the benefits of Uptime:</p>
+
+<ul>
+  <li>Monitor thousands of websites (powered by Node.js asynchronous programming)</li>
+  <li>Record availability statistics for further reporting (powered by MongoDB)</li>
+  <li>Get details about failed checks (HTTP error code, etc.)</li>
+  <li>Complete API for integration with third-party monitoring services</li>
+</ul>
+
+<p>If you want to see it in action you can watch a quick demo on <a href="https://vimeo.com/39302164">Vimeo</a>. While the video shows the install it skips some of the actual configuration steps needed to get it up and running quickly on your server such as the install of node.js and setting up mongodb.</p>
+
+<h3 id="installation-and-configuration">Installation and configuration</h3>
+
+<p>First we need to install the needed applications for Uptime to run properly. For this we will need some basic development packages as well as the latest version of <a href="http://nodejs.org/">Node.js</a>:</p>
+
+<pre><code>apt-get update
+apt-get install gcc make g++ git python-software-properties -y
+apt-add-repository ppa:chris-lea/node.js -y
+apt-get update
+apt-get install nodejs -y
+</code></pre>
+
+<p>Additionally you’ll need MongoDB. The one that comes with the default install of Ubuntu 12 seemed woefully out of date so I installed the latest version using the following:</p>
+
+<pre><code>apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+echo "deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen" | tee -a /etc/apt/sources.list.d/10gen.list
+apt-get -y update
+apt-get -y install mongodb-10gen
+</code></pre>
+
+<p>I am putting my uptime app in /var/www so you may need to adjust your commands depending on the path that you want to run it from. Let’s clone the uptime project to our system and install it.</p>
+
+<pre><code>cd /var/www
+git clone git://github.com/fzaninotto/uptime.git
+cd uptime
+npm install
+</code></pre>
+
+<p>If we attempt to start Uptime now it will fail out because we need to create a MongoDB user and assign it a password and role. For this guide I am using MongoDB 2.4. If you are using 2.6 see <a href="http://docs.mongodb.org/manual/tutorial/add-user-to-database/">this guide</a> for how to create a new user as the syntax has changed. To drop in to the mongodb shell just type in <code>mongo</code> and then switch to the uptime database that was created when you installed the app:</p>
+
+<pre><code>use uptime
+db.addUser({ user:"uptime", pwd:"gallifrey", roles:["readWrite"] })
+</code></pre>
+
+<p>Now it is time to make sure that our user is properly assigned:</p>
+
+<p><code>
+[root@hyperion ~ ] # mongo  
+MongoDB shell version: 2.4.9  
+connecting to: test  
+&gt; use uptime  
+switched to db uptime  
+&gt; show users  
+{  
+        "_id" : ObjectId("53ece0a0a33f66451a56e86c"),  
+        "user" : "uptime",  
+        "pwd" : "51b70f4d284218eb962c10b8269c352d",  
+        "roles" : [  
+                "readWrite"  
+        ]  
+}  
+&gt; exit  
+bye  
+</code></p>
+
+<p>Now that we have the user created, we need to adjst the configuration file <code>/var/www/uptime/config/default.yaml</code> with the username and password. Here is what the updated mongodb part of the configuration file will look like:</p>
+
+<p>```
+url: ‘http://localhost:8082’</p>
+
+<p>mongodb:
+  server:   localhost
+  database: uptime
+  user:     uptime
+  password: gallifrey
+  connectionString:       # alternative to setting server, database, user and password separately
+```</p>
+
+<p>By default uptime is not secure, and anyone that can get to your hostname or IP can see your healthchecks. To get around this let’s update the authorization section as follows (obviously you should use a noce secure password and not tardis):</p>
+
+<p><code>
+basicAuth:
+  username:    uptime_admin
+  password:    tardis
+</code></p>
+
+<p>After we make this change we also need to uncomment the basicAuth plugin line in the default.yaml</p>
+
+<p>```
+[hyperion ~ ] #grep ‘plugins/basicAuth’ /var/www/uptime/config/default.yaml
+  # - ./plugins/basicAuth</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>[hyperion ~ ] # sed -i ‘s</td>
+      <td># - ./plugins/basicAuth</td>
+      <td>- ./plugins/basicAuth</td>
+      <td>’ /var/www/uptime/config/default.yaml</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>[hyperion ~ ] # grep ‘plugins/basicAuth’ /var/www/uptime/config/default.yaml
+  - ./plugins/basicAuth</p>
+
+<p>```</p>
+
+<p>It is time to test that we’ve got everything set up correctly by starting the app:</p>
+
+<pre><code>cd /var/www/uptime/
+node app.js
+</code></pre>
+
+<p>If everything starts as expected you will get a lot of console output. You should now visit <code>http://x.x.x.x:8082</code>, where x.x.x.x is the IP of the server you are running this on. If you are testing this on a local system you can also use <code>http://localhost:8082</code></p>
+
+<p>{&lt;1&gt;}<img src="https://dl.dropboxusercontent.com/u/131462/Images/uptime1.png" alt="Uptime Initial Screen" /></p>
+
+<p>You can now start setting up your uptime checks. I’m not going to go over that aspect of the process here, but you can find more information on the <a href="http://redotheweb.com/uptime/">Uptime Project Page</a>, the <a href="https://github.com/fzaninotto/uptime">Uptime Github page</a> or this <a href="https://groups.google.com/forum/#!forum/node-uptime">Google Group</a> dedicated to uptime.</p>
+
+<h3 id="adding-process-control">Adding process control</h3>
+
+<p>If we don’t fork the process to the background it will end as soon as we terminate our session or reboot the machine. This is where Supervisord comes in. <a href="http://supervisord.org/">Supervisord</a> is a process monitoring control system that allows for the starting of processes at boot and can also restart services if they die unexpectedly.</p>
+
+<p>Any files found in /etc/supervisor/conf.d ending in .conf will be read by Supervisor. Use your favorite text editor and create a uptime.conf file that has the following:</p>
+
+<p><code>
+[program:uptime]
+command = node /var/www/uptime/app.js
+directory = /var/www/uptime
+user = root
+autostart = true
+autorestart = true
+stdout_logfile = /var/log/supervisor/uptime.log
+stderr_logfile = /var/log/supervisor/uptime_err.log
+</code></p>
+
+<p>We now need to reread the supervisor conf.d directory, update the process monitor, and start our service:</p>
+
+<p>```
+[hyperion ~ ] # supervisorctl reread
+uptime: available</p>
+
+<p>[hyperion ~ ] # supervisorctl update
+uptime: added process group</p>
+
+<p>[hyperion ~ ] # supervisorctl start uptime
+uptime: started
+```</p>
+
+<p>If all goes well you can again visit <code>http://x.x.x.x:8082</code> or <code>http://localhost:8082</code> and start setting our health checks. Happy Monitoring!!</p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">tinybot</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>tinybot</li>
+          <li><a href="mailto:ryantiffany@gmail.com">ryantiffany@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/greyhound-forty">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">greyhound-forty</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/ryantiffany">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">ryantiffany</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text"></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>

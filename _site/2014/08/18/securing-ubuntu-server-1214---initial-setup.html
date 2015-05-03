@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Securing Ubuntu Server 12/14 - Initial Setup</title>
+  <meta name="description" content="Most VPS provider provide root login via SSH when the instance is initially provisioned. For obvious reasons we want to turn that off. I recommend having 2 t...">
+
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="canonical" href="http://yourdomain.com/2014/08/18/securing-ubuntu-server-1214---initial-setup.html">
+  <link rel="alternate" type="application/rss+xml" title="tinybot" href="http://yourdomain.com/feed.xml" />
+</head>
+
+
+  <body>
+
+    <header class="site-header">
+
+  <div class="wrapper">
+
+    <a class="site-title" href="/">tinybot</a>
+
+    <nav class="site-nav">
+      <a href="#" class="menu-icon">
+        <svg viewBox="0 0 18 15">
+          <path fill="#424242" d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.031C17.335,0,18,0.665,18,1.484L18,1.484z"/>
+          <path fill="#424242" d="M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0c0-0.82,0.665-1.484,1.484-1.484 h15.031C17.335,6.031,18,6.696,18,7.516L18,7.516z"/>
+          <path fill="#424242" d="M18,13.516C18,14.335,17.335,15,16.516,15H1.484C0.665,15,0,14.335,0,13.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.031C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+        </svg>
+      </a>
+
+      <div class="trigger">
+        
+          
+          <a class="page-link" href="/about/">About</a>
+          
+        
+          
+        
+          
+        
+          
+        
+      </div>
+    </nav>
+
+  </div>
+
+</header>
+
+
+    <div class="page-content">
+      <div class="wrapper">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Securing Ubuntu Server 12/14 - Initial Setup</h1>
+    <p class="post-meta">Aug 18, 2014</p>
+  </header>
+
+  <article class="post-content">
+    <p>Most VPS provider provide root login via SSH when the instance is initially provisioned. For obvious reasons we want to turn that off. I recommend having 2 terminal sessions open while doing your initial security update, in case you end up locking yourself out.</p>
+
+<p>For those of you whose instances are provisioned with a user other than root, you have most likely been granted sudo access. If that is the case you can skip this bit:</p>
+
+<pre><code>:~# useradd -m -g users -G sudo -s /bin/bash newuser  
+:~# passwd newuser  
+:~# EDITOR=nano visudo // yes I prefer nano
+</code></pre>
+
+<p>With our new sudo user created we can start updating our SSH configuration. As someone that works in tech support I am paranoid about obliterating configuration files. So for my sanity I will create a backup</p>
+
+<pre><code>:~# cp -v /etc/ssh/sshd_config{,.bak}
+</code></pre>
+
+<p>Now let’s check the PermitRootLogin and Port entry in our config file:</p>
+
+<pre><code>:~# egrep 'PermitRootLogin|Port' /etc/ssh/sshd_config
+Port 22  
+PermitRootLogin yes  
+</code></pre>
+
+<p>Now you can use your favorite editor to update the file but why not make life easier on yourself with sed:</p>
+
+<pre><code>:~# sed -i 's|Port 22|Port 3322|g' /etc/ssh/sshd_config  
+:~# sed -i 's|PermitRootLogin yes|PermitRootLogin no|g' /etc/ssh/sshd_config
+</code></pre>
+
+<p>Time to set up our initial firewall rules</p>
+
+<pre><code>&gt;&gt; Run as root or use sudo  
+:~# sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT  
+:~# sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT  
+:~# sudo iptables -A INPUT -p tcp --dport 3322 -j ACCEPT  
+:~# sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT  
+:~# sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT  
+:~# sudo iptables -A INPUT -j DROP
+:~# sudo iptables -I INPUT 1 -i lo -j ACCEPT  
+</code></pre>
+
+<p>Let’s check on our rules before we save them just to make sure we’ll be able to get back in</p>
+
+<pre><code>:~# root@ubuntu:~# iptables -nL
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0
+ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+ACCEPT     all  --  0.0.0.0/0            0.0.0.0/0            ctstate RELATED,ESTABLISHED
+ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:3322
+ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:80
+ACCEPT     tcp  --  0.0.0.0/0            0.0.0.0/0            tcp dpt:443
+DROP       all  --  0.0.0.0/0            0.0.0.0/0
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+</code></pre>
+
+<p>To ensure our firewall rules are saved through restarts we’ll install and use iptables-persistent</p>
+
+<pre><code>:~# sudo apt-get install -y iptables-persistent  
+:~# sudo service iptables-persistent start
+</code></pre>
+
+<p>Now we can take our login a step further by setting up SSH keys. On our local machine we can generate our SSH keys for the newuser, since this is how we will be accessing the server after reboot. If your local system is linux you can use ssh-keygen to generate the key pair. If your local machine is Windows see this <a href="http://sshcontrol.com/help/puttygen_keys">guide</a> for generating and using SSH keys:</p>
+
+<pre><code>root@vbox:~# ssh-keygen -t rsa -C "vboxhost"
+Generating public/private rsa key pair.
+Enter file in which to save the key (/root/.ssh/id_rsa):
+/root/.ssh/id_rsa already exists.
+Overwrite (y/n)? y
+Enter passphrase (empty for no passphrase):    // # I'd highly recommend passphrases
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa.
+Your public key has been saved in /root/.ssh/id_rsa.pub.
+The key fingerprint is:
+ac:db:b4:ce:ee:dc:e5:99:64:1d:a7:69:11:7a:ad:3b vboxhost
+The key's randomart image is:
++--[ RSA 2048]----+
+|                 |
+|                 |
+|              .  |
+|       .     . o |
+|        S   . + o|
+|       .     o B |
+|      . .   + *  |
+|       * o = +E. |
+|      .+O . + .. |
++-----------------+
+</code></pre>
+
+<p>As this is is our first key we’ll use the defaults. As noted above I would highly recommend providing a pass-phrase. If someone manages to get your key then the pass-phrase provides an extra barrier to entry. By default your keys are stored in $HOME/.ssh. To get the new key to the remote server we’ll be using the ssh-copy-id utility. This tool lets you copy a public key to a server when you are still using password based login. This is why we did not start the ssh service after our changes earlier.</p>
+
+<pre><code>:~# root@vbox:~# ssh-copy-id newuser@192.168.1.68
+The authenticity of host '192.168.1.68 (192.168.1.68)' can't be established.
+ECDSA key fingerprint is c1:09:ed:e8:20:66:fa:c7:5c:fc:2b:21:ec:5d:5f:eb.
+Are you sure you want to continue connecting (yes/no)? yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+newuser@192.168.1.68's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'newuser@192.168.1.68'"
+and check to make sure that only the key(s) you wanted were added.
+</code></pre>
+
+<p>Now let’s test that our keyworks before we reboot the instance. You will be prompted for your key passphrase unless you use a utility like ssh-agent which I’ll discuss in part 2 of this guide:</p>
+
+<pre><code>:~# root@vbox:~# ssh 'newuser@192.168.1.68'
+Enter passphrase for key '/root/.ssh/id_rsa':
+Welcome to Ubuntu 12.04.4 LTS (GNU/Linux 3.2.0-61-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+newuser@ubuntu:~$
+</code></pre>
+
+<p>Now it is time to cross your fingers and reboot. Once the system is back online we’ll add a few more things to help secure our server:</p>
+
+<h2 id="ssh-agent">SSH-Agent</h2>
+
+<p>Before we go further however I would like to mention SSH-Agent. This little utility does you a favor by managing your SSH keys for you. This is helpful when you have assigned a passphrase to your SSH key. With this tool you enter the passphrase once, and after that, ssh-agent keeps your key in its memory and pulls it up whenever it is needed.</p>
+
+<pre><code>:~# ssh-agent
+SSH_AUTH_SOCK=/tmp/ssh-tBYKKVasWnft/agent.14140; export SSH_AUTH_SOCK;
+SSH_AGENT_PID=14141; export SSH_AGENT_PID;
+echo Agent pid 14141;
+
+:~# eval `ssh-agent -s`
+Agent pid 14144
+
+:~# ssh-add ~/.ssh/id_rsa
+Enter passphrase for /root/.ssh/id_rsa:
+Identity added: /root/.ssh/id_rsa (/root/.ssh/id_rsa)
+
+:~# ssh newuser@192.168.1.68
+Welcome to Ubuntu 12.04.4 LTS (GNU/Linux 3.2.0-61-virtual x86_64)
+
+ * Documentation:  https://help.ubuntu.com/
+Last login: Thu May 22 18:55:34 2014 from 192.168.1.68.static.local
+newuser@ubuntu:~$
+</code></pre>
+
+<p>As you can see we no longer need to provide our passphrase when ssh-ing in to our new server. You can also use the command <code>ssh-add -l</code> to look at your currently loaded keys.</p>
+
+<p>Now that we can easily get back in to our box let’s continue plugging some holes.</p>
+
+<h2 id="devshm">/dev/shm</h2>
+
+<p>The <code>/dev/shm</code> mount can be used in an attack against a running service, such as httpd or nginx. To get around this we will modify /etc/fstab to make it more secure. Add the following to the bottom of the fstab file:</p>
+
+<pre><code>tmpfs     /dev/shm     tmpfs     defaults,noexec,nosuid     0     0
+</code></pre>
+
+<h2 id="fail2ban">Fail2ban</h2>
+
+<p>The Fail2ban program scans your servers log files and bans IPs that look malicious. Examples of malicious activity would include things like; too many password failures, probing for exploits, etc.</p>
+
+<pre><code>:~# sudo apt-get install fail2ban
+</code></pre>
+
+<p>After the install open up the /etc/fail2ban/jail.conf file for editing - Find this line - how to tell which line</p>
+
+<pre><code>:~# egrep -n -i '# Jails' /etc/fail2ban/jail.conf  
+78:# JAILS
+</code></pre>
+
+<p>Delete everything beneath that line and replace it with the content below and save. If you’re using nano/vi you can easily get to that spot with +N where N is the line number. In this case it would be <code>nano +78 /etc/fail2ban/jail.conf</code> or <code>vi +78 /etc/fail2ban/jail.conf</code></p>
+
+<pre><code>[ssh]
+
+enabled  = true
+port     = 3322
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 6
+
+[ssh-ddos]
+
+enabled  = true
+port     = 3322
+filter   = sshd-ddos
+logpath  = /var/log/auth.log
+maxretry = 10
+
+[recidive]
+
+enabled  = true
+filter   = recidive
+logpath  = /var/log/fail2ban.log
+action   = iptables-allports[name=recidive]
+       sendmail-whois-lines[name=recidive, logpath=/var/log/fail2ban.log]
+bantime  = 604800  ; 1 week
+findtime = 86400   ; 1 day
+maxretry = 5
+</code></pre>
+
+<p>You can activate any services you would like fail2ban to monitor by changing enabled = false to enabled = true in the configuration file. You can also create rule filters for various services that are not monitored by default with fail2ban. This is done with the help of the <code>/etc/fail2ban/jail.local</code> file. Check out <a href="https://www.digitalocean.com/community/articles/how-to-protect-ssh-with-fail2ban-on-ubuntu-12-04">this Digital Ocean guide</a> for more information on using the jail.local file.</p>
+
+<p>After we’re done configuring fail2ban we need to restart the service and check the status:</p>
+
+<pre><code>:~# sudo service fail2ban restart  
+
+:~# sudo fail2ban-client status
+Status
+|- Number of jail:      1
+`- Jail list:           ssh
+</code></pre>
+
+<p>This completes our initial setup of our Ubuntu server. If you’d like to dive deeper in to securing your server check out the following guides:</p>
+
+<p><a href="https://www.digitalocean.com/community/articles/how-to-install-and-use-bastille-to-harden-an-ubuntu-12-04">Hardening Ubuntu with Bastille</a><br />
+<a href="http://www.andrewault.net/2010/05/17/securing-an-ubuntu-server/">Securing Ubuntu with Tiger, PSAD, and more</a><br />
+<a href="http://www.thefanclub.co.za/how-to/how-secure-ubuntu-1204-lts-server-part-2-gui-installer-script">Ubuntu Secure GUI installer script</a></p>
+
+
+  </article>
+
+</div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">tinybot</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col  footer-col-1">
+        <ul class="contact-list">
+          <li>tinybot</li>
+          <li><a href="mailto:ryantiffany@gmail.com">ryantiffany@gmail.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-2">
+        <ul class="social-media-list">
+          
+          <li>
+            <a href="https://github.com/greyhound-forty">
+              <span class="icon  icon--github">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M7.999,0.431c-4.285,0-7.76,3.474-7.76,7.761 c0,3.428,2.223,6.337,5.307,7.363c0.388,0.071,0.53-0.168,0.53-0.374c0-0.184-0.007-0.672-0.01-1.32 c-2.159,0.469-2.614-1.04-2.614-1.04c-0.353-0.896-0.862-1.135-0.862-1.135c-0.705-0.481,0.053-0.472,0.053-0.472 c0.779,0.055,1.189,0.8,1.189,0.8c0.692,1.186,1.816,0.843,2.258,0.645c0.071-0.502,0.271-0.843,0.493-1.037 C4.86,11.425,3.049,10.76,3.049,7.786c0-0.847,0.302-1.54,0.799-2.082C3.768,5.507,3.501,4.718,3.924,3.65 c0,0,0.652-0.209,2.134,0.796C6.677,4.273,7.34,4.187,8,4.184c0.659,0.003,1.323,0.089,1.943,0.261 c1.482-1.004,2.132-0.796,2.132-0.796c0.423,1.068,0.157,1.857,0.077,2.054c0.497,0.542,0.798,1.235,0.798,2.082 c0,2.981-1.814,3.637-3.543,3.829c0.279,0.24,0.527,0.713,0.527,1.437c0,1.037-0.01,1.874-0.01,2.129 c0,0.208,0.14,0.449,0.534,0.373c3.081-1.028,5.302-3.935,5.302-7.362C15.76,3.906,12.285,0.431,7.999,0.431z"/>
+                </svg>
+              </span>
+
+              <span class="username">greyhound-forty</span>
+            </a>
+          </li>
+          
+
+          
+          <li>
+            <a href="https://twitter.com/ryantiffany">
+              <span class="icon  icon--twitter">
+                <svg viewBox="0 0 16 16">
+                  <path fill="#828282" d="M15.969,3.058c-0.586,0.26-1.217,0.436-1.878,0.515c0.675-0.405,1.194-1.045,1.438-1.809
+                  c-0.632,0.375-1.332,0.647-2.076,0.793c-0.596-0.636-1.446-1.033-2.387-1.033c-1.806,0-3.27,1.464-3.27,3.27 c0,0.256,0.029,0.506,0.085,0.745C5.163,5.404,2.753,4.102,1.14,2.124C0.859,2.607,0.698,3.168,0.698,3.767 c0,1.134,0.577,2.135,1.455,2.722C1.616,6.472,1.112,6.325,0.671,6.08c0,0.014,0,0.027,0,0.041c0,1.584,1.127,2.906,2.623,3.206 C3.02,9.402,2.731,9.442,2.433,9.442c-0.211,0-0.416-0.021-0.615-0.059c0.416,1.299,1.624,2.245,3.055,2.271 c-1.119,0.877-2.529,1.4-4.061,1.4c-0.264,0-0.524-0.015-0.78-0.046c1.447,0.928,3.166,1.469,5.013,1.469 c6.015,0,9.304-4.983,9.304-9.304c0-0.142-0.003-0.283-0.009-0.423C14.976,4.29,15.531,3.714,15.969,3.058z"/>
+                </svg>
+              </span>
+
+              <span class="username">ryantiffany</span>
+            </a>
+          </li>
+          
+        </ul>
+      </div>
+
+      <div class="footer-col  footer-col-3">
+        <p class="text"></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+
+
+  </body>
+
+</html>
