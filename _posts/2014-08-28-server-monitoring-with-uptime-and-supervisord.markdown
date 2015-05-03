@@ -46,7 +46,7 @@ If we attempt to start Uptime now it will fail out because we need to create a M
 
 Now it is time to make sure that our user is properly assigned:
 
-```
+{% highlight bash %}
 [root@hyperion ~ ] # mongo  
 MongoDB shell version: 2.4.9  
 connecting to: test  
@@ -63,11 +63,11 @@ switched to db uptime
 }  
 > exit  
 bye  
-```
+{% endhighlight %}
 
 Now that we have the user created, we need to adjst the configuration file `/var/www/uptime/config/default.yaml` with the username and password. Here is what the updated mongodb part of the configuration file will look like:
 
-```
+{% highlight bash %}
 url: 'http://localhost:8082'
 
 mongodb:
@@ -76,20 +76,20 @@ mongodb:
   user:     uptime
   password: gallifrey
   connectionString:       # alternative to setting server, database, user and password separately
-```
+{% endhighlight %}
 
 By default uptime is not secure, and anyone that can get to your hostname or IP can see your healthchecks. To get around this let's update the authorization section as follows (obviously you should use a noce secure password and not tardis):
 
-```
+{% highlight bash %}
 basicAuth:
   username:    uptime_admin
   password:    tardis
-```
+{% endhighlight %}
 
 After we make this change we also need to uncomment the basicAuth plugin line in the default.yaml
 
 
-```
+{% highlight bash %}
 [hyperion ~ ] #grep 'plugins/basicAuth' /var/www/uptime/config/default.yaml
   # - ./plugins/basicAuth
 
@@ -97,8 +97,7 @@ After we make this change we also need to uncomment the basicAuth plugin line in
 
 [hyperion ~ ] # grep 'plugins/basicAuth' /var/www/uptime/config/default.yaml
   - ./plugins/basicAuth
-
-```
+{% endhighlight %}
 
 It is time to test that we've got everything set up correctly by starting the app:
 
@@ -119,7 +118,7 @@ If we don't fork the process to the background it will end as soon as we termina
 Any files found in /etc/supervisor/conf.d ending in .conf will be read by Supervisor. Use your favorite text editor and create a uptime.conf file that has the following:
 
 
-```
+{% highlight bash %}
 [program:uptime]
 command = node /var/www/uptime/app.js
 directory = /var/www/uptime
@@ -128,11 +127,11 @@ autostart = true
 autorestart = true
 stdout_logfile = /var/log/supervisor/uptime.log
 stderr_logfile = /var/log/supervisor/uptime_err.log
-```
+{% endhighlight %}
 
 We now need to reread the supervisor conf.d directory, update the process monitor, and start our service:
 
-```
+{% highlight bash %}
 [hyperion ~ ] # supervisorctl reread
 uptime: available
 
@@ -141,7 +140,7 @@ uptime: added process group
 
 [hyperion ~ ] # supervisorctl start uptime
 uptime: started
-```
+{% endhighlight %}
 
 
 If all goes well you can again visit `http://x.x.x.x:8082` or `http://localhost:8082` and start setting our health checks. Happy Monitoring!!
