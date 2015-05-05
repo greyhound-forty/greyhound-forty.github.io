@@ -605,6 +605,8 @@ chmod changes the file mode bits of each given file according to mode, which can
 [<*>]  ~  ls -l tmpfile
 -rw-rw-r-- 1 root ryan 0 May  5 12:54 tmpfile
 {% endhighlight %}
+This breaks down as `(user)(group)(world)` or `(rw-)(rw-)(r--)`
+
 > The first character (in this case an underscore) is the special permission flag that can vary.  
 > The first set of three characters (rw-) is for the owner permissions.  
 > The second set of three characters (rw-) is for the Group permissions.  
@@ -612,14 +614,25 @@ chmod changes the file mode bits of each given file according to mode, which can
 > r = read = 4  
 > w = write = 2  
 > x = execute = 1
-> user - group - world  
-> -(rwx)(r-x)(r-x)  
 
-
+You can set the executable bit by using the `-x` option or setting the perms to `775`
 {% highlight bash %}
+[<*>]  ~  chmod +x tmpfile
+[<*>]  ~  ls -l tmpfile
+-rwxrwxr-x 1 ryan ryan 0 May  5 12:54 tmpfile
 
+[<*>]  ~  stat -c '%n %a' tmpfile
+tmpfile 775
+
+[<*>]  ~  chmod 444 tmpfile
+[<*>]  ~  stat -c '%n %a' tmpfile
+tmpfile 444
+
+[<*>]  ~  chmod u+rw,g+rwx tmpfile
+[<*>]  ~  stat -c '%n %a' tmpfile
+tmpfile 674
 {% endhighlight %}
-
+[7 Chmod Command Examples for Beginners](http://www.thegeekstuff.com/2010/06/chmod-command-examples/)
 
 
 
