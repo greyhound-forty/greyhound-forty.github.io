@@ -430,33 +430,99 @@ Less is similar to more command, but less allows both forward and backward movem
     10j = 10 lines forward  
     10k = 10 lines backward
     v = using the configured editor edit the current file  
-    
 
 ### head
+Head prints the first N number of data of the given input. By default, it prints first 10 lines of each given file.
 
+{% highlight bash %}
+[<*>]  ~  head -n5 testfile.txt
+Lorem
+ipsum
+dolor
+sit
+amet
+[<*>]  ~  head testfile.txt
+Lorem
+ipsum
+dolor
+sit
+amet
+consectetur
+adipiscing
+elit
+Proin
+blandit
+{% endhighlight %}
+
+You can also pass the output of another command to head:
+
+{% highlight bash %}
+[<*>]  ~  ls | head
+backup
+bar1
+bin
+my
+project
+test2
+thing
+thing1
+apthist
+apthist_mark1
+{% endhighlight %}
 
 ### tail
+Tail prints the last N number of data of the given input. By default, it prints last 10 lines of each given file. You can also use the `-f` flag to have the output update in real time. As with the head command you can also pass the output of other commands to tail
+{% highlight bash %}
+[<*>]  ~  tail -n 2 testfile.txt
+lacus
+luctus
 
+[<*>]  ~  ls | tail -5
+readme.txt
+readme.txt~
+record_552867.mp4
+start.sh
+testfile.txt
+{% endhighlight %}
 
 ### grep
 
+{% highlight bash %}
+
+{% endhighlight %}
 
 ### which
 
+{% highlight bash %}
+
+{% endhighlight %}
 
 ### history
 
+{% highlight bash %}
+
+{% endhighlight %}
 
 ### chown
 
+{% highlight bash %}
+
+{% endhighlight %}
 
 ### chmod
 
+{% highlight bash %}
+
+{% endhighlight %}
 
 ### find
 
+{% highlight bash %}
+
+{% endhighlight %}
 
 ### locate
 
+{% highlight bash %}
 
-### clear
+{% endhighlight %}
