@@ -300,18 +300,75 @@ PING google.com (74.125.227.164) 56(84) bytes of data. --- google.com ping stati
 
 ### mv
 
-{% highlight bash %}
+The way the move command actually works is that it copies the original file to the new path or name and then deletes the original. You can see this more readily if you use the `-v` command
 
+{% highlight bash %}
+[<*>]  ~ ls -i about.md
+4461464 about.md
+[<*>]  ~ mv about.md aboutyou.md
+[<*>]  ~ ls -i aboutyou.md
+4461464 aboutyou.md
+
+[<*>]  ~ ls -i aboutyou.md
+4461464 aboutyou.md
+
+[<*>]  ~ mv aboutyou.md /bacula
+[<*>]  ~ ls -i /bacula/aboutyou.md
+12 /bacula/aboutyou.md
 {% endhighlight %}
 
+We can also move multiple files to a new location. The last path in the command is where the files will be moved to:
 
+{% highlight bash %}
+[<*>]  ~  ls -l thing
+total 0
+[<*>]  ~  mv -v foo bar css foo1 thing
+‘foo’ -> ‘thing/foo’
+‘bar’ -> ‘thing/bar’
+‘css’ -> ‘thing/css’
+‘foo1’ -> ‘thing/foo1’
+
+[<*>]  ~  ls thing
+bar  css  foo  foo1
+{% endhighlight %}
 
 ### cp
-
+To copy a file, you need to pass source and destination to the copy command. If you want to copy a file from one folder to another with the same name you only need to specify the new location and not the exact filename
 {% highlight bash %}
+[<*>]  ~  cp -v apthist thing1
+‘apthist’ -> ‘thing1/apthist’
 
+[<*>]  ~  cp -v thing1/apthist ~/thing/foo/new_apthist
+‘thing1/apthist’ -> ‘/home/ryan/thing/foo/new_apthist’
 {% endhighlight %}
 
+If you want to copy a directory and all of its contents from source to destination you would use the `-r` flag:
+
+{% highlight bash %}
+[<*>]  ~  ls things
+_includes  _layouts  _posts  _sass  _config.yml  feed.xml  index.html
+[<*>]  ~  mkdir ~/backup
+[<*>]  ~  ls -l ~/backup
+total 0
+[<*>]  ~  cp -r things/* backup/
+[<*>]  ~  ls  ~/backup
+_includes  _layouts  _posts  _sass  _config.yml  feed.xml  index.html
+{% endhighlight %}
+
+** caveat ** When you execute the cp command on a file that is a symlink the file is copied but the link is not preserved. To preserve the link you need to use the `-d` flag:
+
+{% highlight bash %}
+[<*>] $  ls -l
+total 0
+lrwxrwxrwx 1 ryan ryan 23 May  5 08:55 start.sh -> /home/ryan/bin/start.sh
+[<*>] $  cp start.sh ~/
+[<*>] $  ls -l ~/start.sh
+-rw-rw-r-- 1 ryan ryan 0 May  5 08:55 /home/ryan/start.sh
+
+[<*>] $  cp -d start.sh ~/things
+[<*>] $  ls -l ~/things/start.sh
+lrwxrwxrwx 1 ryan ryan 23 May  5 08:58 /home/ryan/things/start.sh -> /home/ryan/bin/start.sh
+{% endhighlight %}
 
 ### rm
 
