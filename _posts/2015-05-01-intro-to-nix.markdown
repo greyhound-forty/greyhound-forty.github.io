@@ -607,12 +607,12 @@ chmod changes the file mode bits of each given file according to mode, which can
 {% endhighlight %}
 > The first character (in this case an underscore) is the special permission flag that can vary.  
 > The first set of three characters (rw-) is for the owner permissions.  
-> The second set of three characters (rw-) is for the Group permissions.
-> The third set of three characters (r--) is for the All Users permissions.
+> The second set of three characters (rw-) is for the Group permissions.  
+> The third set of three characters (r--) is for the All Users permissions.  
 > r = read = 4  
-> w = write = 2
-> x = execute = 1  
-> user - group - world
+> w = write = 2  
+> x = execute = 1
+> user - group - world  
 > -(rwx)(r-x)(r-x)  
 
 
