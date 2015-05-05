@@ -355,7 +355,7 @@ total 0
 _includes  _layouts  _posts  _sass  _config.yml  feed.xml  index.html
 {% endhighlight %}
 
-** caveat ** When you execute the cp command on a file that is a symlink the file is copied but the link is not preserved. To preserve the link you need to use the `-d` flag:
+**Caveat** When you execute the cp command on a file that is a symlink the file is copied but the link is not preserved. To preserve the link you need to use the `-d` flag:
 
 {% highlight bash %}
 [<*>] $  ls -l
