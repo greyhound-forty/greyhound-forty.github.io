@@ -372,7 +372,7 @@ lrwxrwxrwx 1 ryan ryan 23 May  5 08:58 /home/ryan/things/start.sh -> /home/ryan/
 [More cp examples](http://www.thegeekstuff.com/2013/03/cp-command-examples/)
 
 ### rm
-The rm command is used to remove objects from the filesystem. You can use the `-f` option to not be prompted about the removal.  
+The rm command is used to remove objects from the filesystem. You can use the `-f` option to not be prompted about the removal. If you are still getting used to the rm command, it can be useful to add the following line to your ~/.bashrc file: alias rm='rm -i'
 
 {% highlight bash %}
 [<*>]  ~  rm -i testfile
@@ -380,26 +380,56 @@ rm: remove regular file ‘testfile’? y
 
 [<*>]  ~  rm -f tokenfile
 [<*>]  ~
+
+[<*>]  ~  touch readme.txt
+[<*>]  ~  for i in {1..10}; do touch file$i; done
+[<*>]  ~  ls -l
+total 0
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file1
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file10
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file2
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file3
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file4
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file5
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file6
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file7
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file8
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 file9
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 readme.txt
+
+[<*>]  ~  rm -f file[1-10]
+[<*>]  ~  ls -l
+-rw-rw-r-- 1 ryan ryan 0 May  5 09:53 readme.txt
 {% endhighlight %}
 
+{% highlight bash %}
+[<*>]  ~  rm -f things
+rm: cannot remove ‘things’: Is a directory
 
+[<*>]  ~  rmdir things
+rmdir: failed to remove ‘things’: Directory not empty
 
-
+[<*>]  ~  rm -i -rf things
+[<*>]  ~  ls things
+ls: cannot access things: No such file or directory
+{% endhighlight %}
+Be very careful when using rm -rf, since its power can be used for both good and evil :)
 
 ### man
-
-{% highlight bash %}
-
-{% endhighlight %}
-
+The man pages are a user manual that is by default built into most Linux distributions (i.e., versions) and most other Unix-like operating systems during installation. They provide extensive documentation about commands and other aspects of the system, including configuration files, system calls, library routines and the kernel (i.e., the core of the operating system).
 
 ### less
+Less is similar to more command, but less allows both forward and backward movements. Moreover, less don’t require to load the whole file before viewing. Common commands:
 
-{% highlight bash %}
-
-{% endhighlight %}
-
-
+  / – search for a pattern which will take you to the next occurrence.
+  n – for next match in forward
+  ? – search for a pattern which will take you to the previous occurrence.
+  g = go to the start of file
+  Shift + g = go to the end of file
+  Shift + f = same as tail -f (bebfit is that you can still use / to search)
+  10j = 10 lines forward
+  10k = 10 lines backward.
+  v = using the configured editor edit the current file.
 
 ### head
 
