@@ -118,7 +118,9 @@ As you can see, the one thing that all absolute paths have in common is that the
 
 
 #### Relative Path
+The other kind of path is called a relative path. bash, cd and other commands always interpret these paths relative to the current directory. Relative paths never begin with a /. So, if we're in /usr
 
+Relative paths may also contain one or more .. directories. The .. directory is a special directory that points to the parent directory. 
 
 ### ls
 Lists the contents of a directory. Sort entries alphabetically if no flags are passed.
