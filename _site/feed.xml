@@ -5,8 +5,8 @@
     <description></description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 04 May 2015 20:47:17 -0500</pubDate>
-    <lastBuildDate>Mon, 04 May 2015 20:47:17 -0500</lastBuildDate>
+    <pubDate>Mon, 04 May 2015 21:11:00 -0500</pubDate>
+    <lastBuildDate>Mon, 04 May 2015 21:11:00 -0500</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -124,6 +124,91 @@ tinybot± &lt;span class=&quot;nb&quot;&gt;pwd&lt;/span&gt;
 &lt;h4 id=&quot;relative-path&quot;&gt;Relative Path&lt;/h4&gt;
 
 &lt;h3 id=&quot;ls&quot;&gt;ls&lt;/h3&gt;
+&lt;p&gt;Lists the contents of a directory. Sort entries alphabetically if no flags are passed.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&amp;lt;*&amp;gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;  things  ls -l &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;wc -l
+10
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&amp;lt;*&amp;gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;  things  ls -la &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;wc -l
+13
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&amp;lt;*&amp;gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;  things  ls -la
+total 48
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;7&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 .
+drwxr-xr-x &lt;span class=&quot;m&quot;&gt;11&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:56 ..
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 css
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 _includes
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 _layouts
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 _posts
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 _sass
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan  &lt;span class=&quot;m&quot;&gt;470&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 about.md
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan  &lt;span class=&quot;m&quot;&gt;557&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 _config.yml
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;1291&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 feed.xml
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan   &lt;span class=&quot;m&quot;&gt;18&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 .gitignore
+-rw-r--r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan  &lt;span class=&quot;m&quot;&gt;506&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; 20:55 index.html&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;± ls -l */
+node_modules/:
+total 40
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:24 hexo
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:29 hexo-deployer-git
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 hexo-generator-archive
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 hexo-generator-category
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 hexo-generator-index
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 hexo-generator-tag
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 hexo-renderer-ejs
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 hexo-renderer-marked
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 hexo-renderer-stylus
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 hexo-server
+
+public/:
+total 28
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:27 2015
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:27 archives
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:27 css
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:27 fancybox
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:27 js
+-rw-rw-r-- &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;7549&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:27 index.html
+
+scaffolds/:
+total 12
+-rw-rw-r-- &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;29&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 draft.md
+-rw-rw-r-- &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;40&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 page.md
+-rw-rw-r-- &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;46&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 post.md
+
+&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;/:
+total 4
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:24 _posts
+
+themes/:
+total 4
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;5&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:23 landscape
+
+ryan@neptune&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;~/testing-site on gh-pages!
+± ls -d */
+node_modules/  public/  scaffolds/  &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;/  themes/&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;List files sorted by the time they were last modified. You can use the &lt;code&gt;-r&lt;/code&gt; flag to show last modified in reverse order (most recently modified files last).&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;± ls -lt
+total 32
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;7&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:34 public
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;13&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:33 node_modules
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:32 &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:32 themes
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:32 scaffolds
+-rw-rw-r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan  &lt;span class=&quot;m&quot;&gt;174&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:36 db.json
+-rw-rw-r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;1600&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:36 _config.yml
+-rw-rw-r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan  &lt;span class=&quot;m&quot;&gt;481&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:33 package.json
+
+± ls -ltr
+total 32
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:32 scaffolds
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:32 themes
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:32 &lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt;
+drwxrwxr-x &lt;span class=&quot;m&quot;&gt;13&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:33 node_modules
+drwxrwxr-x  &lt;span class=&quot;m&quot;&gt;7&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;4096&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:34 public
+-rw-rw-r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan  &lt;span class=&quot;m&quot;&gt;481&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:33 package.json
+-rw-rw-r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan &lt;span class=&quot;m&quot;&gt;1600&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:36 _config.yml
+-rw-rw-r--  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; ryan ryan  &lt;span class=&quot;m&quot;&gt;174&lt;/span&gt; May  &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; 16:36 db.json&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;cd&quot;&gt;cd&lt;/h3&gt;
 

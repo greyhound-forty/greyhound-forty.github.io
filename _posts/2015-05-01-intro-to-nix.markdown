@@ -142,6 +142,8 @@ drwxrwxr-x  2 ryan ryan 4096 May  4 20:55 _sass
 -rw-r--r--  1 ryan ryan  506 May  4 20:55 index.html
 {% endhighlight %}
 
+List the contents of all subdirectories. Use the `-d` flag to just list directories.
+{% highlight bash %}
 ± ls -l */
 node_modules/:
 total 40
@@ -208,7 +210,6 @@ drwxrwxr-x  7 ryan ryan 4096 May  3 16:34 public
 -rw-rw-r--  1 ryan ryan  481 May  3 16:33 package.json
 -rw-rw-r--  1 ryan ryan 1600 May  3 16:36 _config.yml
 -rw-rw-r--  1 ryan ryan  174 May  3 16:36 db.json
-
 {% endhighlight %}
 
 ### cd
