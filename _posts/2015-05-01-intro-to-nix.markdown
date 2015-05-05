@@ -5,7 +5,7 @@ date:   2015-05-01 09:49:55
 categories: jekyll update
 ---
 
-This tutorial (Introduction to *Nix: Part 1) is for those who are new to Linux, or those who want to review their understanding of fundamental Linux concepts and commands. For beginners, a lot of this material will be new. For more experienced users you can use this as a refresher or jump ahead to [Part 2]() or [Part 3]()
+This tutorial (Introduction to *Nix: Part 1) is for those who are new to Linux, or those who want to review their understanding of fundamental Linux concepts and commands. For beginners, a lot of this material will be new. For more experienced users you can use this as a refresher or jump ahead to [Part 2]() or [Part 3]() **Or you will be able to once I get around to writing those sections**
 
 Why does this say *nix? Well I am not going to go down the rabbit hole of the Unix vs Linux discussion so a quick explanation of both:
 
@@ -709,7 +709,7 @@ By time we can use the following options:
 
     "-atime" = Access Time: Last time a file was read or written to.
     "-mtime" = Modification Time: Last time the contents of the file were modified.
-    "-ctime" = Change Time: Last time the file's inode meta-data was changed.    
+    "-ctime" = Change Time: Last time the file's inode meta-data was changed.
 
 [35 find examples](http://www.binarytides.com/linux-find-command-examples/)
 
