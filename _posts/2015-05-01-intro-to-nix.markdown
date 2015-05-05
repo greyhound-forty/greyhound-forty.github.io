@@ -705,7 +705,8 @@ You can also search by size and time of file. To find by size you can use the `-
     M = Megabytes
     G = Gigabytes
 
-By time we can use the following options:
+By time we can use the following options:  
+
     "-atime" = Access Time: Last time a file was read or written to.  
     "-mtime" = Modification Time: Last time the contents of the file were modified.  
     "-ctime" = Change Time: Last time the file's inode meta-data was changed.  
