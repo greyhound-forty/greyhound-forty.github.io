@@ -504,9 +504,99 @@ testfile.txt
 {% endhighlight %}
 
 ### chown
-
+chown changes the user and/or group ownership of each given file.  If only an owner (a user name or numeric user ID) is given, that user is made the owner of each given file, and the files' group is not changed. You can use the `-R` command to make this recursive in to subdirectories
 {% highlight bash %}
+[<*>]  ~  ls -lart tmpfile
+-rw-rw-r-- 1 ryan ryan 0 May  5 12:54 tmpfile
 
+[<*>]  ~  chown root tmpfile
+[<*>]  ~  ls -lart tmpfile
+-rw-rw-r-- 1 root ryan 0 May  5 12:54 tmpfile
+
+[<*>]  ~  ls -l backup/*
+-rw-rw-r-- 1 ryan ryan    0 May  5 09:53 backup/file2
+-rw-rw-r-- 1 ryan ryan    0 May  5 09:53 backup/file3
+-rw-rw-r-- 1 ryan ryan    0 May  5 09:53 backup/file4
+-rw-rw-r-- 1 ryan ryan    0 May  5 09:53 backup/file5
+-rw-rw-r-- 1 ryan ryan  995 May  5 09:57 backup/readme.txt
+
+backup/subfolder:
+total 0
+-rw-rw-r-- 1 ryan ryan 0 May  5 12:58 text_1
+-rw-rw-r-- 1 ryan ryan 0 May  5 12:58 text_2
+-rw-rw-r-- 1 ryan ryan 0 May  5 12:58 text_3
+
+[<*>]  ~  _ chown -R root backup/
+[<*>]  ~  ls -l backup/*
+-rw-rw-r-- 1 root ryan    0 May  5 09:53 backup/file2
+-rw-rw-r-- 1 root ryan    0 May  5 09:53 backup/file3
+-rw-rw-r-- 1 root ryan    0 May  5 09:53 backup/file4
+-rw-rw-r-- 1 root ryan    0 May  5 09:53 backup/file5
+-rw-rw-r-- 1 root ryan  995 May  5 09:57 backup/readme.txt
+
+backup/subfolder:
+total 0
+-rw-rw-r-- 1 root ryan 0 May  5 12:58 text_1
+-rw-rw-r-- 1 root ryan 0 May  5 12:58 text_2
+-rw-rw-r-- 1 root ryan 0 May  5 12:58 text_3
+{% endhighlight %}
+
+To just change the group of a file or directory use the `:group` syntax. Again you can use `-R` to make the changes recursive.
+{% highlight bash %}
+[<*>]  ~  _ chown :users backup/file2
+[<*>]  ~  ls -l backup/
+total 8
+drwxrwxr-x 2 root ryan  4096 May  5 12:58 subfolder
+-rw-rw-r-- 1 root users    0 May  5 09:53 file2
+-rw-rw-r-- 1 root ryan     0 May  5 09:53 file3
+-rw-rw-r-- 1 root ryan     0 May  5 09:53 file4
+-rw-rw-r-- 1 root ryan     0 May  5 09:53 file5
+-rw-rw-r-- 1 root ryan   995 May  5 09:57 readme.txt
+
+[<*>]  ~  _ chown -R :users backup/
+[<*>]  ~  ls -l backup/*
+-rw-rw-r-- 1 root users    0 May  5 09:53 backup/file2
+-rw-rw-r-- 1 root users    0 May  5 09:53 backup/file3
+-rw-rw-r-- 1 root users    0 May  5 09:53 backup/file4
+-rw-rw-r-- 1 root users    0 May  5 09:53 backup/file5
+-rw-rw-r-- 1 root users  995 May  5 09:57 backup/readme.txt
+
+backup/subfolder:
+total 0
+-rw-rw-r-- 1 root users 0 May  5 12:58 text_1
+-rw-rw-r-- 1 root users 0 May  5 12:58 text_2
+-rw-rw-r-- 1 root users 0 May  5 12:58 text_3
+{% endhighlight %}
+
+You can change the user and group at the same time using the syntax `user:group`. If the user and the group name are the same you can use `user:`. Again `-R` makes the change recursive.
+{% highlight bash %}
+[<*>]  ~  _ chown -R ryan: backup/
+[<*>]  ~  ls -l backup/*
+-rw-rw-r-- 1 ryan ryan    0 May  5 09:53 backup/file2
+-rw-rw-r-- 1 ryan ryan    0 May  5 09:53 backup/file3
+-rw-rw-r-- 1 ryan ryan    0 May  5 09:53 backup/file4
+-rw-rw-r-- 1 ryan ryan    0 May  5 09:53 backup/file5
+-rw-rw-r-- 1 ryan ryan  995 May  5 09:57 backup/readme.txt
+
+backup/subfolder:
+total 0
+-rw-rw-r-- 1 ryan ryan 0 May  5 12:58 text_1
+-rw-rw-r-- 1 ryan ryan 0 May  5 12:58 text_2
+-rw-rw-r-- 1 ryan ryan 0 May  5 12:58 text_3
+
+[<*>]  ~  _ chown -R ryan:users backup/
+[<*>]  ~  ls -l backup/*
+-rw-rw-r-- 1 ryan users    0 May  5 09:53 backup/file2
+-rw-rw-r-- 1 ryan users    0 May  5 09:53 backup/file3
+-rw-rw-r-- 1 ryan users    0 May  5 09:53 backup/file4
+-rw-rw-r-- 1 ryan users    0 May  5 09:53 backup/file5
+-rw-rw-r-- 1 ryan users  995 May  5 09:57 backup/readme.txt
+
+backup/subfolder:
+total 0
+-rw-rw-r-- 1 ryan users 0 May  5 12:58 text_1
+-rw-rw-r-- 1 ryan users 0 May  5 12:58 text_2
+-rw-rw-r-- 1 ryan users 0 May  5 12:58 text_3
 {% endhighlight %}
 
 ### chmod
