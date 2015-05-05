@@ -600,10 +600,26 @@ total 0
 {% endhighlight %}
 
 ### chmod
-
+chmod changes the file mode bits of each given file according to mode, which can be either a symbolic representation of changes to make, or an octal number representing the bit pattern for the new mode bits.
 {% highlight bash %}
-
+[<*>]  ~  ls -l tmpfile
+-rw-rw-r-- 1 root ryan 0 May  5 12:54 tmpfile
 {% endhighlight %}
+> The first character (in this case an _) is the special permission flag that can vary.  
+> The first set of three characters (rw-) is for the owner permissions.
+> The second set of three characters (rw-) is for the Group permissions.
+> The third set of three characters (r--) is for the All Users permissions.    
+
+r = read = 4
+w = write = 2
+x = execute = 1  
+user - group - world  
+-(rwx)(r-x)(r-x)
+
+
+
+
+
 
 ### find
 
