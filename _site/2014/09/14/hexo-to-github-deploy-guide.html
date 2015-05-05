@@ -120,7 +120,7 @@ ryan@ghost ~/testing-site % hexo server
 <p>After we’ve set up our new repo we’ll head back to our local system and clone our newly created repo:</p>
 
 <pre><code>rm -rf ~/testing-site
-git clone git@github.com:greyhound-forty/ballin-octo-batman.git ~/testing-site
+git clone git@github.com:inchhighassassins/psychic-bugfixes.git ~/testing-site
 cd ~/testing-site
 </code></pre>
 
@@ -134,6 +134,7 @@ git rm -rf .
 
 <pre><code>hexo init .
 npm install
+npm install hexo-deployer-git --save
 </code></pre>
 
 <p>Create a new page and push to Github:</p>
@@ -146,67 +147,36 @@ git push origin gh-pages
 
 <p>Now we will edit the configuration file with our Github repository details. You have the option of adding a line for a specific branch you want to publish to but Hexo can figure this out automatically so I am leaving it out. From my experience if you are deploying to a main Github page (i.e. youruser.github.io) then you can leave this blank. If you are pushing to a child page like http://youruser.github.io/blog then it is best to to add the line <code>branch: gh-pages</code> under the repository section.</p>
 
-<pre><code>deploy:
-  		type: github
-  		repository: git@github.com:greyhound-forty/fuzzy-octo-meme.git
-</code></pre>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">deploy:
+   <span class="nb">type</span>: git  
+   repository: git@github.com:inchhighassassins/psychic-bugfixes.git  
+   branch: gh-pages</code></pre></div>
 
 <p>Now generate and deploy</p>
 
 <pre><code>hexo generate
-hexo deploy
+hexo d
 </code></pre>
 
 <p>If we’ve set up everything correctly the output should look something like this:</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">ryan@ghost ~/testing-site <span class="o">[</span>gh-pages *<span class="o">]</span> % hexo generate
-<span class="o">[</span>info<span class="o">]</span> Files loaded in 0.136s
-<span class="o">[</span>create<span class="o">]</span> Generated: archives/index.html <span class="o">(</span>74ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: archives/2014/index.html <span class="o">(</span>21ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: archives/2014/08/index.html <span class="o">(</span>15ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: index.html <span class="o">(</span>13ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: 2014/08/25/testing-deploy/index.html <span class="o">(</span>13ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: 2014/08/25/hello-world/index.html <span class="o">(</span>18ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: js/script.js <span class="o">(</span>2ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: css/style.css <span class="o">(</span>691ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/FontAwesome.otf <span class="o">(</span>2ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/fontawesome-webfont.eot <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/fontawesome-webfont.svg <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/fontawesome-webfont.ttf <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: css/fonts/fontawesome-webfont.woff <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: css/images/banner.jpg <span class="o">(</span>2ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/blank.gif <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_loading.gif <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_loading@2x.gif <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_overlay.png <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_sprite.png <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/fancybox_sprite@2x.png <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/jquery.fancybox.css <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/jquery.fancybox.js <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/jquery.fancybox.pack.js <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/fancybox_buttons.png <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-buttons.css <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-buttons.js <span class="o">(</span>1ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-media.js <span class="o">(</span>2ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-thumbs.css <span class="o">(</span>0ms<span class="o">)</span>
-<span class="o">[</span>create<span class="o">]</span> Generated: fancybox/helpers/jquery.fancybox-thumbs.js <span class="o">(</span>0ms<span class="o">)</span>
-<span class="o">[</span>info<span class="o">]</span> <span class="m">29</span> files generated in 0.884s
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">ryan@neptune<span class="p">|</span>~/psychic-bugfixes on gh-pages
+± hexo d
 
-ryan@ghost ~/testing-site <span class="o">[</span>gh-pages *<span class="o">]</span> % hexo deploy
-<span class="o">[</span>info<span class="o">]</span> Start deploying: github
-<span class="o">[</span>info<span class="o">]</span> Setting up GitHub deployment...
-Initialized empty Git repository in /home/ryan/testing-site/.deploy/.git/
-<span class="o">[</span>master <span class="o">(</span>root-commit<span class="o">)</span> b62505d<span class="o">]</span> First commit
+INFO  Deploying: git
+INFO  Setting up Git deployment...
+Initialized empty Git repository in /home/ryan/psychic-bugfixes/.deploy_git/.git/
+<span class="o">[</span>master <span class="o">(</span>root-commit<span class="o">)</span> d3f86e9<span class="o">]</span> First commit
  <span class="m">1</span> file changed, <span class="m">0</span> insertions<span class="o">(</span>+<span class="o">)</span>, <span class="m">0</span> deletions<span class="o">(</span>-<span class="o">)</span>
  create mode <span class="m">100644</span> placeholder
-<span class="o">[</span>info<span class="o">]</span> Clearing .deploy folder...
-<span class="o">[</span>info<span class="o">]</span> Copying files from public folder...
-<span class="o">[</span>gh-pages b1df09b<span class="o">]</span> Site updated: 2014-08-26 00:00:55
- <span class="m">30</span> files changed, <span class="m">6207</span> insertions<span class="o">(</span>+<span class="o">)</span>
- create mode <span class="m">100644</span> 2014/08/25/hello-world/index.html
- create mode <span class="m">100644</span> 2014/08/25/testing-deploy/index.html
- create mode <span class="m">100644</span> archives/2014/08/index.html
- create mode <span class="m">100644</span> archives/2014/index.html
+INFO  Clearing .deploy folder...
+INFO  Copying files from public folder...
+<span class="o">[</span>master 9c897d8<span class="o">]</span> Site updated: 2015-05-03 16:34:38
+ <span class="m">30</span> files changed, <span class="m">6050</span> insertions<span class="o">(</span>+<span class="o">)</span>
+ create mode <span class="m">100644</span> 2015/05/03/Testing-Deploy/index.html
+ create mode <span class="m">100644</span> 2015/05/03/hello-world/index.html
+ create mode <span class="m">100644</span> archives/2015/05/index.html
+ create mode <span class="m">100644</span> archives/2015/index.html
  create mode <span class="m">100644</span> archives/index.html
  create mode <span class="m">100644</span> css/fonts/FontAwesome.otf
  create mode <span class="m">100644</span> css/fonts/fontawesome-webfont.eot
@@ -233,18 +203,18 @@ Initialized empty Git repository in /home/ryan/testing-site/.deploy/.git/
  create mode <span class="m">100644</span> index.html
  create mode <span class="m">100644</span> js/script.js
  delete mode <span class="m">100644</span> placeholder
-Warning: Permanently added the RSA host key <span class="k">for</span> IP address <span class="s1">&#39;x.x.x.x&#39;</span> to the list of known hosts.
-To git@github.com:greyhound-forty/ballin-octo-batman.git
- + e6fe5eb...b1df09b gh-pages -&gt; gh-pages <span class="o">(</span>forced update<span class="o">)</span>
-Branch gh-pages <span class="nb">set </span>up to track remote branch gh-pages from git@github.com:greyhound-forty/ballin-octo-batman.git.
-<span class="o">[</span>info<span class="o">]</span> Deploy <span class="k">done</span>: github</code></pre></div>
+To git@github.com:inchhighassassins/psychic-bugfixes.git
+ + 1ddef9d...9c897d8 master -&gt; gh-pages <span class="o">(</span>forced update<span class="o">)</span>
+Branch master <span class="nb">set </span>up to track remote branch gh-pages from git@github.com:inchhighassassins/psychic-bugfixes.git.
+INFO  Deploy <span class="k">done</span>: git</code></pre></div>
 
-<p>It takes about 10 minutes for Github Pages sites to show up, but you can see my test page <a href="http://greyhound-forty.github.io/ballin-octo-batman">here</a>.</p>
+<p>It takes about 10 minutes for Github Pages sites to show up, but you can see my test page <a href="https://inchhighassassins.github.io/psychic-bugfixes/">here</a>.</p>
 
 <h3 id="clean-up">Clean up</h3>
 <p>Remove .deploy folder.</p>
 
-<div class="highlight"><pre><code class="language-bash" data-lang="bash">rm -rf .deploy</code></pre></div>
+<pre><code>rm -rf .deploy
+</code></pre>
 
 <h3 id="custom-domain">Custom Domain</h3>
 

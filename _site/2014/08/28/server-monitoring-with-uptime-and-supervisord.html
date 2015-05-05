@@ -110,67 +110,50 @@ db.addUser({ user:"uptime", pwd:"gallifrey", roles:["readWrite"] })
 
 <p>Now it is time to make sure that our user is properly assigned:</p>
 
-<p><code>
-[root@hyperion ~ ] # mongo  
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>root@hyperion ~ <span class="o">]</span> <span class="c"># mongo  </span>
 MongoDB shell version: 2.4.9  
-connecting to: test  
+connecting to: <span class="nb">test</span>  
 &gt; use uptime  
 switched to db uptime  
 &gt; show users  
-{  
-        "_id" : ObjectId("53ece0a0a33f66451a56e86c"),  
-        "user" : "uptime",  
-        "pwd" : "51b70f4d284218eb962c10b8269c352d",  
-        "roles" : [  
-                "readWrite"  
-        ]  
-}  
-&gt; exit  
-bye  
-</code></p>
+<span class="o">{</span>  
+        <span class="s2">&quot;_id&quot;</span> : ObjectId<span class="o">(</span><span class="s2">&quot;53ece0a0a33f66451a56e86c&quot;</span><span class="o">)</span>,  
+        <span class="s2">&quot;user&quot;</span> : <span class="s2">&quot;uptime&quot;</span>,  
+        <span class="s2">&quot;pwd&quot;</span> : <span class="s2">&quot;51b70f4d284218eb962c10b8269c352d&quot;</span>,  
+        <span class="s2">&quot;roles&quot;</span> : <span class="o">[</span>  
+                <span class="s2">&quot;readWrite&quot;</span>  
+        <span class="o">]</span>  
+<span class="o">}</span>  
+&gt; <span class="nb">exit  </span>
+bye</code></pre></div>
 
 <p>Now that we have the user created, we need to adjst the configuration file <code>/var/www/uptime/config/default.yaml</code> with the username and password. Here is what the updated mongodb part of the configuration file will look like:</p>
 
-<p>```
-url: ‘http://localhost:8082’</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">url: <span class="s1">&#39;http://localhost:8082&#39;</span>
 
-<p>mongodb:
+mongodb:
   server:   localhost
   database: uptime
   user:     uptime
   password: gallifrey
-  connectionString:       # alternative to setting server, database, user and password separately
-```</p>
+  connectionString:       <span class="c"># alternative to setting server, database, user and password separately</span></code></pre></div>
 
 <p>By default uptime is not secure, and anyone that can get to your hostname or IP can see your healthchecks. To get around this let’s update the authorization section as follows (obviously you should use a noce secure password and not tardis):</p>
 
-<p><code>
-basicAuth:
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">basicAuth:
   username:    uptime_admin
-  password:    tardis
-</code></p>
+  password:    tardis</code></pre></div>
 
 <p>After we make this change we also need to uncomment the basicAuth plugin line in the default.yaml</p>
 
-<p>```
-[hyperion ~ ] #grep ‘plugins/basicAuth’ /var/www/uptime/config/default.yaml
-  # - ./plugins/basicAuth</p>
+<pre><code>[hyperion ~ ] $ grep 'plugins/basicAuth' /var/www/uptime/config/default.yaml
+  	# - ./plugins/basicAuth
 
-<table>
-  <tbody>
-    <tr>
-      <td>[hyperion ~ ] # sed -i ‘s</td>
-      <td># - ./plugins/basicAuth</td>
-      <td>- ./plugins/basicAuth</td>
-      <td>’ /var/www/uptime/config/default.yaml</td>
-    </tr>
-  </tbody>
-</table>
+[hyperion ~ ] $ sed -i 's|# - ./plugins/basicAuth|- ./plugins/basicAuth|' /var/www/uptime/config/default.yaml
 
-<p>[hyperion ~ ] # grep ‘plugins/basicAuth’ /var/www/uptime/config/default.yaml
-  - ./plugins/basicAuth</p>
-
-<p>```</p>
+[hyperion ~ ] $ grep 'plugins/basicAuth' /var/www/uptime/config/default.yaml
+  	- ./plugins/basicAuth
+</code></pre>
 
 <p>It is time to test that we’ve got everything set up correctly by starting the app:</p>
 
@@ -190,29 +173,26 @@ node app.js
 
 <p>Any files found in /etc/supervisor/conf.d ending in .conf will be read by Supervisor. Use your favorite text editor and create a uptime.conf file that has the following:</p>
 
-<p><code>
-[program:uptime]
-command = node /var/www/uptime/app.js
-directory = /var/www/uptime
-user = root
-autostart = true
-autorestart = true
-stdout_logfile = /var/log/supervisor/uptime.log
-stderr_logfile = /var/log/supervisor/uptime_err.log
-</code></p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>program:uptime<span class="o">]</span>
+<span class="nb">command</span> <span class="o">=</span> node /var/www/uptime/app.js
+<span class="nv">directory</span> <span class="o">=</span> /var/www/uptime
+<span class="nv">user</span> <span class="o">=</span> root
+<span class="nv">autostart</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="nv">autorestart</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="nv">stdout_logfile</span> <span class="o">=</span> /var/log/supervisor/uptime.log
+<span class="nv">stderr_logfile</span> <span class="o">=</span> /var/log/supervisor/uptime_err.log</code></pre></div>
 
 <p>We now need to reread the supervisor conf.d directory, update the process monitor, and start our service:</p>
 
-<p>```
-[hyperion ~ ] # supervisorctl reread
-uptime: available</p>
+<pre><code>[hyperion ~ ] $ supervisorctl reread
+uptime: available
 
-<p>[hyperion ~ ] # supervisorctl update
-uptime: added process group</p>
+[hyperion ~ ] $ supervisorctl update
+uptime: added process group
 
-<p>[hyperion ~ ] # supervisorctl start uptime
+[hyperion ~ ] $ supervisorctl start uptime
 uptime: started
-```</p>
+</code></pre>
 
 <p>If all goes well you can again visit <code>http://x.x.x.x:8082</code> or <code>http://localhost:8082</code> and start setting our health checks. Happy Monitoring!!</p>
 

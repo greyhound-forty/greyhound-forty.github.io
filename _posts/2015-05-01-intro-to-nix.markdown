@@ -15,7 +15,7 @@ Why does this say *nix? Well I am not going to go down the rabbit hole of the Un
 
 ### Basic directory structure
 
-{% highlight shell %}
+{% highlight bash %}
 /
 Also know as "slash" or the root partition
 
@@ -119,7 +119,97 @@ tinybot± pwd
 
 
 ### ls
+Lists the contents of a directory. Sort entries alphabetically if no flags are passed.
 
+{% highlight bash %}
+[<*>]  things  ls -l |wc -l
+10
+[<*>]  things  ls -la |wc -l
+13
+[<*>]  things  ls -la
+total 48
+drwxrwxr-x  7 ryan ryan 4096 May  4 20:55 .
+drwxr-xr-x 11 ryan ryan 4096 May  4 20:56 ..
+drwxrwxr-x  2 ryan ryan 4096 May  4 20:55 css
+drwxrwxr-x  2 ryan ryan 4096 May  4 20:55 _includes
+drwxrwxr-x  2 ryan ryan 4096 May  4 20:55 _layouts
+drwxrwxr-x  2 ryan ryan 4096 May  4 20:55 _posts
+drwxrwxr-x  2 ryan ryan 4096 May  4 20:55 _sass
+-rw-r--r--  1 ryan ryan  470 May  4 20:55 about.md
+-rw-r--r--  1 ryan ryan  557 May  4 20:55 _config.yml
+-rw-r--r--  1 ryan ryan 1291 May  4 20:55 feed.xml
+-rw-r--r--  1 ryan ryan   18 May  4 20:55 .gitignore
+-rw-r--r--  1 ryan ryan  506 May  4 20:55 index.html
+{% endhighlight %}
+
+± ls -l */
+node_modules/:
+total 40
+drwxrwxr-x 5 ryan ryan 4096 May  3 16:24 hexo
+drwxrwxr-x 4 ryan ryan 4096 May  3 16:29 hexo-deployer-git
+drwxrwxr-x 4 ryan ryan 4096 May  3 16:23 hexo-generator-archive
+drwxrwxr-x 4 ryan ryan 4096 May  3 16:23 hexo-generator-category
+drwxrwxr-x 4 ryan ryan 4096 May  3 16:23 hexo-generator-index
+drwxrwxr-x 4 ryan ryan 4096 May  3 16:23 hexo-generator-tag
+drwxrwxr-x 3 ryan ryan 4096 May  3 16:23 hexo-renderer-ejs
+drwxrwxr-x 4 ryan ryan 4096 May  3 16:23 hexo-renderer-marked
+drwxrwxr-x 4 ryan ryan 4096 May  3 16:23 hexo-renderer-stylus
+drwxrwxr-x 4 ryan ryan 4096 May  3 16:23 hexo-server
+
+public/:
+total 28
+drwxrwxr-x 3 ryan ryan 4096 May  3 16:27 2015
+drwxrwxr-x 3 ryan ryan 4096 May  3 16:27 archives
+drwxrwxr-x 4 ryan ryan 4096 May  3 16:27 css
+drwxrwxr-x 3 ryan ryan 4096 May  3 16:27 fancybox
+drwxrwxr-x 2 ryan ryan 4096 May  3 16:27 js
+-rw-rw-r-- 1 ryan ryan 7549 May  3 16:27 index.html
+
+scaffolds/:
+total 12
+-rw-rw-r-- 1 ryan ryan 29 May  3 16:23 draft.md
+-rw-rw-r-- 1 ryan ryan 40 May  3 16:23 page.md
+-rw-rw-r-- 1 ryan ryan 46 May  3 16:23 post.md
+
+source/:
+total 4
+drwxrwxr-x 2 ryan ryan 4096 May  3 16:24 _posts
+
+themes/:
+total 4
+drwxrwxr-x 5 ryan ryan 4096 May  3 16:23 landscape
+
+ryan@neptune|~/testing-site on gh-pages!
+± ls -d */
+node_modules/  public/  scaffolds/  source/  themes/
+{% endhighlight %}
+
+List files sorted by the time they were last modified. You can use the `-r` flag to show last modified in reverse order (most recently modified files last).
+
+{% highlight bash %}
+± ls -lt
+total 32
+drwxrwxr-x  7 ryan ryan 4096 May  3 16:34 public
+drwxrwxr-x 13 ryan ryan 4096 May  3 16:33 node_modules
+drwxrwxr-x  3 ryan ryan 4096 May  3 16:32 source
+drwxrwxr-x  3 ryan ryan 4096 May  3 16:32 themes
+drwxrwxr-x  2 ryan ryan 4096 May  3 16:32 scaffolds
+-rw-rw-r--  1 ryan ryan  174 May  3 16:36 db.json
+-rw-rw-r--  1 ryan ryan 1600 May  3 16:36 _config.yml
+-rw-rw-r--  1 ryan ryan  481 May  3 16:33 package.json
+
+± ls -ltr
+total 32
+drwxrwxr-x  2 ryan ryan 4096 May  3 16:32 scaffolds
+drwxrwxr-x  3 ryan ryan 4096 May  3 16:32 themes
+drwxrwxr-x  3 ryan ryan 4096 May  3 16:32 source
+drwxrwxr-x 13 ryan ryan 4096 May  3 16:33 node_modules
+drwxrwxr-x  7 ryan ryan 4096 May  3 16:34 public
+-rw-rw-r--  1 ryan ryan  481 May  3 16:33 package.json
+-rw-rw-r--  1 ryan ryan 1600 May  3 16:36 _config.yml
+-rw-rw-r--  1 ryan ryan  174 May  3 16:36 db.json
+
+{% endhighlight %}
 
 ### cd
 

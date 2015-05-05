@@ -74,6 +74,62 @@
   <p>Linux: a Unix-like and mostly POSIX-compliant computer operating system assembled under the model of free and open-source software development and distribution [whose] defining component … is the Linux kernel, an operating system kernel first released [in] 1991 by Linus Torvalds ↑</p>
 </blockquote>
 
+<h3 id="basic-directory-structure">Basic directory structure</h3>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash">/
+Also know as <span class="s2">&quot;slash&quot;</span> or the root partition
+
+/bin
+Common programs, shared by the system, the system administrator and the users.
+
+/boot
+Boot files, boot loader <span class="o">(</span>grub<span class="o">)</span>, kernels, vmlinuz
+
+/dev
+Contains references to system devices, files with special properties.
+
+/etc
+Important system and application configuration files.
+
+/home
+Home directories <span class="k">for</span> system users.
+
+/lib
+Library files, includes files <span class="k">for</span> all kinds of programs needed by the system and the users.
+
+/lost+found
+Files that were saved during failures are here.
+
+/mnt
+Standard mount point <span class="k">for</span> external file systems.
+
+/media
+Mount point <span class="k">for</span> external file systems <span class="o">(</span>on some distros<span class="o">)</span>.
+
+/net
+Standard mount point <span class="k">for</span> entire remote file systems - nfs.
+
+/opt
+Typically contains extra and third party software.
+
+/proc
+A virtual file system containing information about system resources.
+
+/root
+root users home dir.
+
+/sbin
+Programs <span class="k">for</span> use by the system and the system administrator.
+
+/tmp
+Temporary space <span class="k">for</span> use by the system, cleaned upon reboot.
+
+/usr
+Programs, libraries, documentation etc. <span class="k">for</span> all user-related programs.
+
+/var
+Storage <span class="k">for</span> all variable files and temporary files created by users, such as log files, mail queue, print spooler. Web servers, Databases etc.</code></pre></div>
+
 <h3 id="basic-shell-commands">Basic shell commands</h3>
 
 <p>While I could list a few dozen commands that I use everyday I think I’ll keep this intro section to the top 20 or so most useful for beginners or people looking to refresh their shell-fu. Here are the commands we will be looking at in this section:</p>
@@ -101,6 +157,8 @@
   <li><a href="#find">find</a></li>
   <li><a href="#locate">locate</a></li>
   <li><a href="#clear">clear</a></li>
+  <li><a href="#stat">stat</a></li>
+  <li><a href="#file">file</a></li>
 </ul>
 
 <h3 id="pwd">pwd</h3>

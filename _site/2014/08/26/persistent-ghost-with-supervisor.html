@@ -88,18 +88,17 @@ files = /etc/supervisor/conf.d/*.conf
 
 <p>Here is my ghost.conf:</p>
 
-<p><code>
-[program:ghost]
-command = node /var/ghost/index.js
-directory = /var/ghost
-user = ghost
-autostart = true
-autorestart = true
-stdout_logfile = /var/log/supervisor/ghost.log
-stderr_logfile = /var/log/supervisor/ghost_err.log
-environment = NODE_ENV="production"
-</code>
-As you can see from the file I have ghost running from <code>/var/ghost</code> so you’ll need to adjust this to fit your specific needs if you have ghost running from another directory</p>
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="o">[</span>program:ghost<span class="o">]</span>
+<span class="nb">command</span> <span class="o">=</span> node /var/ghost/index.js
+<span class="nv">directory</span> <span class="o">=</span> /var/ghost
+<span class="nv">user</span> <span class="o">=</span> ghost
+<span class="nv">autostart</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="nv">autorestart</span> <span class="o">=</span> <span class="nb">true</span>
+<span class="nv">stdout_logfile</span> <span class="o">=</span> /var/log/supervisor/ghost.log
+<span class="nv">stderr_logfile</span> <span class="o">=</span> /var/log/supervisor/ghost_err.log
+<span class="nv">environment</span> <span class="o">=</span> <span class="nv">NODE_ENV</span><span class="o">=</span><span class="s2">&quot;production&quot;</span></code></pre></div>
+
+<p>As you can see from the file I have ghost running from <code>/var/ghost</code> so you’ll need to adjust this to fit your specific needs if you have ghost running from another directory</p>
 
 <p>Now we need to reread the <code>/etc/supervisor/conf.d</code> directory to pick up the new configuration file and update the Supervisor process monitor</p>
 
@@ -114,10 +113,10 @@ supervisorctl update
 
 <p>You can check the status of any running supervisor script by executing <code>supervisorctl status</code></p>
 
-<p><code>
-root@ghost:~# supervisorctl status
+<pre><code>root@ghost:~# supervisorctl status
 ghost                            RUNNING    pid 7324, uptime 0:06:38
-</code></p>
+</code></pre>
+
 
   </article>
 

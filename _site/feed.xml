@@ -5,8 +5,8 @@
     <description></description>
     <link>http://yourdomain.com/</link>
     <atom:link href="http://yourdomain.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 03 May 2015 16:16:28 -0500</pubDate>
-    <lastBuildDate>Sun, 03 May 2015 16:16:28 -0500</lastBuildDate>
+    <pubDate>Mon, 04 May 2015 20:47:17 -0500</pubDate>
+    <lastBuildDate>Mon, 04 May 2015 20:47:17 -0500</lastBuildDate>
     <generator>Jekyll v2.5.3</generator>
     
       <item>
@@ -22,6 +22,62 @@
 &lt;blockquote&gt;
   &lt;p&gt;Linux: a Unix-like and mostly POSIX-compliant computer operating system assembled under the model of free and open-source software development and distribution [whose] defining component … is the Linux kernel, an operating system kernel first released [in] 1991 by Linus Torvalds ↑&lt;/p&gt;
 &lt;/blockquote&gt;
+
+&lt;h3 id=&quot;basic-directory-structure&quot;&gt;Basic directory structure&lt;/h3&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;/
+Also know as &lt;span class=&quot;s2&quot;&gt;&amp;quot;slash&amp;quot;&lt;/span&gt; or the root partition
+
+/bin
+Common programs, shared by the system, the system administrator and the users.
+
+/boot
+Boot files, boot loader &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;grub&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, kernels, vmlinuz
+
+/dev
+Contains references to system devices, files with special properties.
+
+/etc
+Important system and application configuration files.
+
+/home
+Home directories &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; system users.
+
+/lib
+Library files, includes files &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; all kinds of programs needed by the system and the users.
+
+/lost+found
+Files that were saved during failures are here.
+
+/mnt
+Standard mount point &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; external file systems.
+
+/media
+Mount point &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; external file systems &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;on some distros&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;.
+
+/net
+Standard mount point &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; entire remote file systems - nfs.
+
+/opt
+Typically contains extra and third party software.
+
+/proc
+A virtual file system containing information about system resources.
+
+/root
+root users home dir.
+
+/sbin
+Programs &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; use by the system and the system administrator.
+
+/tmp
+Temporary space &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; use by the system, cleaned upon reboot.
+
+/usr
+Programs, libraries, documentation etc. &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; all user-related programs.
+
+/var
+Storage &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; all variable files and temporary files created by users, such as log files, mail queue, print spooler. Web servers, Databases etc.&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;h3 id=&quot;basic-shell-commands&quot;&gt;Basic shell commands&lt;/h3&gt;
 
@@ -50,6 +106,8 @@
   &lt;li&gt;&lt;a href=&quot;#find&quot;&gt;find&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#locate&quot;&gt;locate&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#clear&quot;&gt;clear&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#stat&quot;&gt;stat&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#file&quot;&gt;file&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;pwd&quot;&gt;pwd&lt;/h3&gt;
@@ -178,7 +236,7 @@ ryan@ghost ~/testing-site % hexo server
 &lt;p&gt;After we’ve set up our new repo we’ll head back to our local system and clone our newly created repo:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;rm -rf ~/testing-site
-git clone git@github.com:greyhound-forty/ballin-octo-batman.git ~/testing-site
+git clone git@github.com:inchhighassassins/psychic-bugfixes.git ~/testing-site
 cd ~/testing-site
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -192,6 +250,7 @@ git rm -rf .
 
 &lt;pre&gt;&lt;code&gt;hexo init .
 npm install
+npm install hexo-deployer-git --save
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Create a new page and push to Github:&lt;/p&gt;
@@ -204,67 +263,36 @@ git push origin gh-pages
 
 &lt;p&gt;Now we will edit the configuration file with our Github repository details. You have the option of adding a line for a specific branch you want to publish to but Hexo can figure this out automatically so I am leaving it out. From my experience if you are deploying to a main Github page (i.e. youruser.github.io) then you can leave this blank. If you are pushing to a child page like http://youruser.github.io/blog then it is best to to add the line &lt;code&gt;branch: gh-pages&lt;/code&gt; under the repository section.&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;deploy:
-  		type: github
-  		repository: git@github.com:greyhound-forty/fuzzy-octo-meme.git
-&lt;/code&gt;&lt;/pre&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;deploy:
+   &lt;span class=&quot;nb&quot;&gt;type&lt;/span&gt;: git  
+   repository: git@github.com:inchhighassassins/psychic-bugfixes.git  
+   branch: gh-pages&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now generate and deploy&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;hexo generate
-hexo deploy
+hexo d
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;If we’ve set up everything correctly the output should look something like this:&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ryan@ghost ~/testing-site &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;gh-pages *&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; % hexo generate
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;info&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Files loaded in 0.136s
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: archives/index.html &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;74ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: archives/2014/index.html &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;21ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: archives/2014/08/index.html &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;15ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: index.html &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;13ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: 2014/08/25/testing-deploy/index.html &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;13ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: 2014/08/25/hello-world/index.html &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;18ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: js/script.js &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: css/style.css &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;691ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: css/fonts/FontAwesome.otf &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: css/fonts/fontawesome-webfont.eot &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: css/fonts/fontawesome-webfont.svg &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: css/fonts/fontawesome-webfont.ttf &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: css/fonts/fontawesome-webfont.woff &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: css/images/banner.jpg &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/blank.gif &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/fancybox_loading.gif &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/fancybox_loading@2x.gif &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/fancybox_overlay.png &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/fancybox_sprite.png &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/fancybox_sprite@2x.png &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/jquery.fancybox.css &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/jquery.fancybox.js &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/jquery.fancybox.pack.js &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/helpers/fancybox_buttons.png &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/helpers/jquery.fancybox-buttons.css &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/helpers/jquery.fancybox-buttons.js &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/helpers/jquery.fancybox-media.js &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/helpers/jquery.fancybox-thumbs.css &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;create&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Generated: fancybox/helpers/jquery.fancybox-thumbs.js &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0ms&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;info&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;29&lt;/span&gt; files generated in 0.884s
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;ryan@neptune&lt;span class=&quot;p&quot;&gt;|&lt;/span&gt;~/psychic-bugfixes on gh-pages
+± hexo d
 
-ryan@ghost ~/testing-site &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;gh-pages *&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; % hexo deploy
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;info&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Start deploying: github
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;info&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Setting up GitHub deployment...
-Initialized empty Git repository in /home/ryan/testing-site/.deploy/.git/
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;master &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root-commit&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; b62505d&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; First commit
+INFO  Deploying: git
+INFO  Setting up Git deployment...
+Initialized empty Git repository in /home/ryan/psychic-bugfixes/.deploy_git/.git/
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;master &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;root-commit&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; d3f86e9&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; First commit
  &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; file changed, &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; insertions&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;+&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; deletions&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;-&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
  create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; placeholder
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;info&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Clearing .deploy folder...
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;info&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Copying files from public folder...
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;gh-pages b1df09b&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Site updated: 2014-08-26 00:00:55
- &lt;span class=&quot;m&quot;&gt;30&lt;/span&gt; files changed, &lt;span class=&quot;m&quot;&gt;6207&lt;/span&gt; insertions&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;+&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
- create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; 2014/08/25/hello-world/index.html
- create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; 2014/08/25/testing-deploy/index.html
- create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; archives/2014/08/index.html
- create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; archives/2014/index.html
+INFO  Clearing .deploy folder...
+INFO  Copying files from public folder...
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;master 9c897d8&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Site updated: 2015-05-03 16:34:38
+ &lt;span class=&quot;m&quot;&gt;30&lt;/span&gt; files changed, &lt;span class=&quot;m&quot;&gt;6050&lt;/span&gt; insertions&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;+&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+ create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; 2015/05/03/Testing-Deploy/index.html
+ create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; 2015/05/03/hello-world/index.html
+ create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; archives/2015/05/index.html
+ create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; archives/2015/index.html
  create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; archives/index.html
  create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; css/fonts/FontAwesome.otf
  create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; css/fonts/fontawesome-webfont.eot
@@ -291,18 +319,18 @@ Initialized empty Git repository in /home/ryan/testing-site/.deploy/.git/
  create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; index.html
  create mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; js/script.js
  delete mode &lt;span class=&quot;m&quot;&gt;100644&lt;/span&gt; placeholder
-Warning: Permanently added the RSA host key &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; IP address &lt;span class=&quot;s1&quot;&gt;&amp;#39;x.x.x.x&amp;#39;&lt;/span&gt; to the list of known hosts.
-To git@github.com:greyhound-forty/ballin-octo-batman.git
- + e6fe5eb...b1df09b gh-pages -&amp;gt; gh-pages &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;forced update&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-Branch gh-pages &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;up to track remote branch gh-pages from git@github.com:greyhound-forty/ballin-octo-batman.git.
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;info&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; Deploy &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;: github&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+To git@github.com:inchhighassassins/psychic-bugfixes.git
+ + 1ddef9d...9c897d8 master -&amp;gt; gh-pages &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;forced update&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+Branch master &lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;up to track remote branch gh-pages from git@github.com:inchhighassassins/psychic-bugfixes.git.
+INFO  Deploy &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;: git&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
-&lt;p&gt;It takes about 10 minutes for Github Pages sites to show up, but you can see my test page &lt;a href=&quot;http://greyhound-forty.github.io/ballin-octo-batman&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;It takes about 10 minutes for Github Pages sites to show up, but you can see my test page &lt;a href=&quot;https://inchhighassassins.github.io/psychic-bugfixes/&quot;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;h3 id=&quot;clean-up&quot;&gt;Clean up&lt;/h3&gt;
 &lt;p&gt;Remove .deploy folder.&lt;/p&gt;
 
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;rm -rf .deploy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;pre&gt;&lt;code&gt;rm -rf .deploy
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&quot;custom-domain&quot;&gt;Custom Domain&lt;/h3&gt;
 
@@ -477,67 +505,50 @@ db.addUser({ user:&quot;uptime&quot;, pwd:&quot;gallifrey&quot;, roles:[&quot;re
 
 &lt;p&gt;Now it is time to make sure that our user is properly assigned:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;
-[root@hyperion ~ ] # mongo  
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;root@hyperion ~ &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# mongo  &lt;/span&gt;
 MongoDB shell version: 2.4.9  
-connecting to: test  
+connecting to: &lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;  
 &amp;gt; use uptime  
 switched to db uptime  
 &amp;gt; show users  
-{  
-        &quot;_id&quot; : ObjectId(&quot;53ece0a0a33f66451a56e86c&quot;),  
-        &quot;user&quot; : &quot;uptime&quot;,  
-        &quot;pwd&quot; : &quot;51b70f4d284218eb962c10b8269c352d&quot;,  
-        &quot;roles&quot; : [  
-                &quot;readWrite&quot;  
-        ]  
-}  
-&amp;gt; exit  
-bye  
-&lt;/code&gt;&lt;/p&gt;
+&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;  
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;_id&amp;quot;&lt;/span&gt; : ObjectId&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;53ece0a0a33f66451a56e86c&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;,  
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;user&amp;quot;&lt;/span&gt; : &lt;span class=&quot;s2&quot;&gt;&amp;quot;uptime&amp;quot;&lt;/span&gt;,  
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;pwd&amp;quot;&lt;/span&gt; : &lt;span class=&quot;s2&quot;&gt;&amp;quot;51b70f4d284218eb962c10b8269c352d&amp;quot;&lt;/span&gt;,  
+        &lt;span class=&quot;s2&quot;&gt;&amp;quot;roles&amp;quot;&lt;/span&gt; : &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;  
+                &lt;span class=&quot;s2&quot;&gt;&amp;quot;readWrite&amp;quot;&lt;/span&gt;  
+        &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;  
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;  
+&amp;gt; &lt;span class=&quot;nb&quot;&gt;exit  &lt;/span&gt;
+bye&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now that we have the user created, we need to adjst the configuration file &lt;code&gt;/var/www/uptime/config/default.yaml&lt;/code&gt; with the username and password. Here is what the updated mongodb part of the configuration file will look like:&lt;/p&gt;
 
-&lt;p&gt;```
-url: ‘http://localhost:8082’&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;url: &lt;span class=&quot;s1&quot;&gt;&amp;#39;http://localhost:8082&amp;#39;&lt;/span&gt;
 
-&lt;p&gt;mongodb:
+mongodb:
   server:   localhost
   database: uptime
   user:     uptime
   password: gallifrey
-  connectionString:       # alternative to setting server, database, user and password separately
-```&lt;/p&gt;
+  connectionString:       &lt;span class=&quot;c&quot;&gt;# alternative to setting server, database, user and password separately&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;By default uptime is not secure, and anyone that can get to your hostname or IP can see your healthchecks. To get around this let’s update the authorization section as follows (obviously you should use a noce secure password and not tardis):&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;
-basicAuth:
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;basicAuth:
   username:    uptime_admin
-  password:    tardis
-&lt;/code&gt;&lt;/p&gt;
+  password:    tardis&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;After we make this change we also need to uncomment the basicAuth plugin line in the default.yaml&lt;/p&gt;
 
-&lt;p&gt;```
-[hyperion ~ ] #grep ‘plugins/basicAuth’ /var/www/uptime/config/default.yaml
-  # - ./plugins/basicAuth&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[hyperion ~ ] $ grep &#39;plugins/basicAuth&#39; /var/www/uptime/config/default.yaml
+  	# - ./plugins/basicAuth
 
-&lt;table&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;[hyperion ~ ] # sed -i ‘s&lt;/td&gt;
-      &lt;td&gt;# - ./plugins/basicAuth&lt;/td&gt;
-      &lt;td&gt;- ./plugins/basicAuth&lt;/td&gt;
-      &lt;td&gt;’ /var/www/uptime/config/default.yaml&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+[hyperion ~ ] $ sed -i &#39;s|# - ./plugins/basicAuth|- ./plugins/basicAuth|&#39; /var/www/uptime/config/default.yaml
 
-&lt;p&gt;[hyperion ~ ] # grep ‘plugins/basicAuth’ /var/www/uptime/config/default.yaml
-  - ./plugins/basicAuth&lt;/p&gt;
-
-&lt;p&gt;```&lt;/p&gt;
+[hyperion ~ ] $ grep &#39;plugins/basicAuth&#39; /var/www/uptime/config/default.yaml
+  	- ./plugins/basicAuth
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;It is time to test that we’ve got everything set up correctly by starting the app:&lt;/p&gt;
 
@@ -557,29 +568,26 @@ node app.js
 
 &lt;p&gt;Any files found in /etc/supervisor/conf.d ending in .conf will be read by Supervisor. Use your favorite text editor and create a uptime.conf file that has the following:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;
-[program:uptime]
-command = node /var/www/uptime/app.js
-directory = /var/www/uptime
-user = root
-autostart = true
-autorestart = true
-stdout_logfile = /var/log/supervisor/uptime.log
-stderr_logfile = /var/log/supervisor/uptime_err.log
-&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;program:uptime&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; node /var/www/uptime/app.js
+&lt;span class=&quot;nv&quot;&gt;directory&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /var/www/uptime
+&lt;span class=&quot;nv&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; root
+&lt;span class=&quot;nv&quot;&gt;autostart&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;autorestart&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;stdout_logfile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /var/log/supervisor/uptime.log
+&lt;span class=&quot;nv&quot;&gt;stderr_logfile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /var/log/supervisor/uptime_err.log&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;We now need to reread the supervisor conf.d directory, update the process monitor, and start our service:&lt;/p&gt;
 
-&lt;p&gt;```
-[hyperion ~ ] # supervisorctl reread
-uptime: available&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[hyperion ~ ] $ supervisorctl reread
+uptime: available
 
-&lt;p&gt;[hyperion ~ ] # supervisorctl update
-uptime: added process group&lt;/p&gt;
+[hyperion ~ ] $ supervisorctl update
+uptime: added process group
 
-&lt;p&gt;[hyperion ~ ] # supervisorctl start uptime
+[hyperion ~ ] $ supervisorctl start uptime
 uptime: started
-```&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;If all goes well you can again visit &lt;code&gt;http://x.x.x.x:8082&lt;/code&gt; or &lt;code&gt;http://localhost:8082&lt;/code&gt; and start setting our health checks. Happy Monitoring!!&lt;/p&gt;
 
@@ -619,18 +627,17 @@ files = /etc/supervisor/conf.d/*.conf
 
 &lt;p&gt;Here is my ghost.conf:&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;
-[program:ghost]
-command = node /var/ghost/index.js
-directory = /var/ghost
-user = ghost
-autostart = true
-autorestart = true
-stdout_logfile = /var/log/supervisor/ghost.log
-stderr_logfile = /var/log/supervisor/ghost_err.log
-environment = NODE_ENV=&quot;production&quot;
-&lt;/code&gt;
-As you can see from the file I have ghost running from &lt;code&gt;/var/ghost&lt;/code&gt; so you’ll need to adjust this to fit your specific needs if you have ghost running from another directory&lt;/p&gt;
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;program:ghost&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; node /var/ghost/index.js
+&lt;span class=&quot;nv&quot;&gt;directory&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /var/ghost
+&lt;span class=&quot;nv&quot;&gt;user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; ghost
+&lt;span class=&quot;nv&quot;&gt;autostart&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;autorestart&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;stdout_logfile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /var/log/supervisor/ghost.log
+&lt;span class=&quot;nv&quot;&gt;stderr_logfile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /var/log/supervisor/ghost_err.log
+&lt;span class=&quot;nv&quot;&gt;environment&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;NODE_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;production&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;As you can see from the file I have ghost running from &lt;code&gt;/var/ghost&lt;/code&gt; so you’ll need to adjust this to fit your specific needs if you have ghost running from another directory&lt;/p&gt;
 
 &lt;p&gt;Now we need to reread the &lt;code&gt;/etc/supervisor/conf.d&lt;/code&gt; directory to pick up the new configuration file and update the Supervisor process monitor&lt;/p&gt;
 
@@ -645,10 +652,10 @@ supervisorctl update
 
 &lt;p&gt;You can check the status of any running supervisor script by executing &lt;code&gt;supervisorctl status&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;
-root@ghost:~# supervisorctl status
+&lt;pre&gt;&lt;code&gt;root@ghost:~# supervisorctl status
 ghost                            RUNNING    pid 7324, uptime 0:06:38
-&lt;/code&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
+
 </description>
         <pubDate>Tue, 26 Aug 2014 09:45:00 -0500</pubDate>
         <link>http://yourdomain.com/2014/08/26/persistent-ghost-with-supervisor.html</link>
@@ -876,7 +883,7 @@ update_system;
 
 &lt;p&gt;First we need to tell cPanel not to monitor/manage Mysql so that it does not try to restart the service while we are moving our data. To do this log in to WHM » Main » Service Configuration » Service Manager and disable mysql. Once that is complete here are the commands to safely move Mysql to a new, larger partition (in this example I am moving mysql to the mount point /newvar):&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;service mysql stop  
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;service mysql stop  
 mkdir -p /newvar  
 mount /dev/xvdc1 /newvar  
 cp -r /var/lib/mysql/ /newvar/  
@@ -886,7 +893,7 @@ chown -R mysql:mysql /newvar/mysql/
 rm -rf /var/lib/mysql/  
 ln -s /newvar/mysql /var/lib/mysql  
 rm -rf /tmp/mysql.sock  
-ln -s /newvar/mysql/mysql.sock /tmp/mysql.sock&lt;/code&gt;&lt;/p&gt;
+ln -s /newvar/mysql/mysql.sock /tmp/mysql.sock&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 
 &lt;p&gt;Now that we’ve moved everything we need to log back in to WHM and re-enable mysql. To do this we log in and go to Main » Service Configuration » Service Manager and enable mysql. Once the service is re-enabled let’s test it to make sure everything starts back up properly. You can do so with the following command:&lt;/p&gt;
 
