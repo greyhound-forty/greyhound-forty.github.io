@@ -635,13 +635,81 @@ tmpfile 674
 [7 Chmod Command Examples for Beginners](http://www.thegeekstuff.com/2010/06/chmod-command-examples/)
 
 
-
-
 ### find
+The Find command used to search and locate list of files and directories based on conditions you specify for files that match the arguments. The syntax is `find location comparison-criteria search-term`
+{% highlight bash %}
+[<*>]  ~  find ./backup -iname "file*"
+./backup/file5
+./backup/file2
+./backup/file3
+./backup/file4
+
+[<*>]  ~  find ./backup -type d
+./backup
+./backup/subfolder
+
+[<*>]  ~  find ./backup  -maxdepth 1 -iname "file*"
+./backup/file5
+./backup/file2
+./backup/file3
+./backup/file4
+[<*>]  ~  find ./backup  -maxdepth 2 -iname "file*"
+./backup/file5
+./backup/file2
+./backup/file3
+./backup/subfolder/file_2
+./backup/subfolder/file_3
+./backup/subfolder/file_1
+./backup/file4
+{% endhighlight %}
+
+You can also use the `-not` option to search for files that do no match a given name or pattern.
 
 {% highlight bash %}
+[<*>]  ~  find ./backup -not -iname "file*"
+./backup
+./backup/readme.txt
+./backup/subfolder
+./backup/subfolder/text_1
+./backup/subfolder/text_3
+./backup/subfolder/text_2
+{% endhighlight %}  
 
+You can use the `-o` option to search for multiple files. You can also use the `!` to prune itmes from the search. In the second example we are looking for files that begin with `file` but do not end in `3`
+
+{% highlight bash %}
+[<*>]  ~  find ./backup -type f -iname 'file*' -o -iname 'text*'
+./backup/file5
+./backup/file2
+./backup/file3
+./backup/subfolder/text_1
+./backup/subfolder/text_3
+./backup/subfolder/file_2
+./backup/subfolder/file_3
+./backup/subfolder/file_1
+./backup/subfolder/text_2
+./backup/file4
+
+[<*>]  ~  find ./backup  -iname 'file*' ! -iname '*3'
+./backup/file5
+./backup/file2
+./backup/subfolder/file_2
+./backup/subfolder/file_1
+./backup/file4
 {% endhighlight %}
+
+You can also search by size and time of file. To find by size you can use the `-size` option with the following parameters:
+> c = bytes  
+> k = Kilobytes  
+> M = Megabytes  
+> G = Gigabytes  
+
+By time we can use the following options:
+> "-atime" = Access Time: Last time a file was read or written to.  
+> "-mtime" = Modification Time: Last time the contents of the file were modified.  
+> "-ctime" = Change Time: Last time the file's inode meta-data was changed.  
+
+[35 find examples](http://www.binarytides.com/linux-find-command-examples/)
 
 ### locate
 
