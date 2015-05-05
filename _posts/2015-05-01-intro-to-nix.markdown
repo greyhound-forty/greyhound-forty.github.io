@@ -112,7 +112,9 @@ tinybot± pwd
 {% endhighlight %}
 
 #### Absolute Path
+Alternatively referred to as the file path and full path, the absolute path contains the root directory and all other subdirectories that contain a file or folder. An absolute path is defined as the specifying the location of a file or directory from the root directory(/). In other words we can say absolute path is a complete path from start of actual filesystem from / directory.
 
+As you can see, the one thing that all absolute paths have in common is that they begin with /. With a path of /usr/local/bin, we're telling cd to enter the / directory, then the usr directory under that, and then local and bin. Absolute paths are always evaluated by starting at / first
 
 
 #### Relative Path
