@@ -345,12 +345,12 @@ To copy a file, you need to pass source and destination to the copy command. If 
 If you want to copy a directory and all of its contents from source to destination you would use the `-r` flag:
 
 {% highlight bash %}
-[<*>]  ~  ls things
+[<*>]  ~  ls ~/things
 _includes  _layouts  _posts  _sass  _config.yml  feed.xml  index.html
 [<*>]  ~  mkdir ~/backup
 [<*>]  ~  ls -l ~/backup
 total 0
-[<*>]  ~  cp -r things/* backup/
+[<*>]  ~  cp -r ~/things/* backup/
 [<*>]  ~  ls  ~/backup
 _includes  _layouts  _posts  _sass  _config.yml  feed.xml  index.html
 {% endhighlight %}
@@ -369,12 +369,20 @@ lrwxrwxrwx 1 ryan ryan 23 May  5 08:55 start.sh -> /home/ryan/bin/start.sh
 [<*>] $  ls -l ~/things/start.sh
 lrwxrwxrwx 1 ryan ryan 23 May  5 08:58 /home/ryan/things/start.sh -> /home/ryan/bin/start.sh
 {% endhighlight %}
+[More cp examples](http://www.thegeekstuff.com/2013/03/cp-command-examples/)
 
 ### rm
+The rm command is used to remove objects from the filesystem. You can use the `-f` option to not be prompted about the removal.  
 
 {% highlight bash %}
+[<*>]  ~  rm -i testfile
+rm: remove regular file ‘testfile’? y
 
+[<*>]  ~  rm -f tokenfile
+[<*>]  ~
 {% endhighlight %}
+
+
 
 
 
