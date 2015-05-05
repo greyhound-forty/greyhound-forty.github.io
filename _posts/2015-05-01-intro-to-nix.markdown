@@ -421,8 +421,8 @@ The man pages are a user manual that is by default built into most Linux distrib
 ### less
 Less is similar to more command, but less allows both forward and backward movements. Moreover, less don’t require to load the whole file before viewing. Common commands:
 
-  / – search for a pattern which will take you to the next occurrence.  
-  n – for next match in forward  
+    / – search for a pattern which will take you to the next occurrence.  
+    n – for next match in forward  
   ? – search for a pattern which will take you to the previous occurrence.  
   g = go to the start of file  
   Shift + g = go to the end of file  
