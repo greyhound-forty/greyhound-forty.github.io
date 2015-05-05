@@ -86,7 +86,6 @@ While I could list a few dozen commands that I use everyday I think I'll keep th
 + [rm](#rm)
 + [man](#man)
 + [less](#less)
-+ [more](#more)
 + [head](#head)
 + [tail](#tail)
 + [grep](#grep)
@@ -112,15 +111,39 @@ tinybot± pwd
 {% endhighlight %}
 
 #### Absolute Path
-Alternatively referred to as the file path and full path, the absolute path contains the root directory and all other subdirectories that contain a file or folder. An absolute path is defined as the specifying the location of a file or directory from the root directory(/). In other words we can say absolute path is a complete path from start of actual filesystem from / directory.
+Alternatively referred to as the file path and full path, the absolute path contains the root directory and all other subdirectories that contain a file or folder. As you can see from the examples below, the one thing that all absolute paths have in common is that they begin with /. With a path of /var/www/html, we're telling cd to enter the / directory, then the var directory under that, and then www and html respectively. In other words we can say absolute path is a complete path from start of actual filesystem from the / directory.
 
-As you can see, the one thing that all absolute paths have in common is that they begin with /. With a path of /usr/local/bin, we're telling cd to enter the / directory, then the usr directory under that, and then local and bin. Absolute paths are always evaluated by starting at / first
-
+{% highlight bash %}
+/usr/local/bin
+/var/www/html
+/home/ryan
+{% endhighlight %}
 
 #### Relative Path
-The other kind of path is called a relative path. bash, cd and other commands always interpret these paths relative to the current directory. Relative paths never begin with a /. So, if we're in /usr
+The other kind of path is called a relative path. bash, cd and other commands always interpret these paths relative to the current directory. Relative paths never begin with a /. So, if we're in /usr we would issue a cd to bin to get to /usr/bin. If we issued the command `cd /bin` we would end up in /bin and not /usr/bin. Relative paths may also contain one or more `..` directories. The `..` directory is a special directory that points to the parent directory.
 
-Relative paths may also contain one or more .. directories. The .. directory is a special directory that points to the parent directory. 
+{% highlight bash %}
+[<*>] $ pwd
+/usr/local
+
+[<*>] $ cd bin
+[<*>] $ pwd
+/usr/local/bin
+
+[<*>] $ cd /usr/local
+[<*>] $ cd /bin
+[<*>] $ pwd
+/bin
+
+[<*>] $ cd /usr/local
+[<*>] $ cd ../share
+/usr/share
+
+[<*>] $ cd /usr/local/bin
+[<*>] $ cd ..
+[<*>] $ pwd
+/usr/local
+{% endhighlight %}
 
 ### ls
 Lists the contents of a directory. Sort entries alphabetically if no flags are passed.
@@ -217,34 +240,100 @@ drwxrwxr-x  7 ryan ryan 4096 May  3 16:34 public
 {% endhighlight %}
 
 ### cd
+With no arguments, cd will change to your home directory, which is /root for the superuser and typically /home/username for a regular user.
 
 
 ### mkdir
+Let's take a quick look at the mkdir command, which can be used to create new directories. The following example creates three new directories, foo, bar, and thing, all under my home directory:
+{% highlight bash %}
+[<*>]  ~  mkdir {foo,bar,thing}
+[<*>]  ~  ls
+bar  foo  thing
 
+[<*>]  ~  mkdir foo1 bar1 thing1
+[<*>]  ~  ls
+bar  bar1  foo  foo1  thing  thing1
+{% endhighlight %}
+
+By default, the mkdir command doesn't create parent directories for you, so if you wanted to create the directory structure `$HOME/my/bin/folder` you need to add the `-p` flag
+
+{% highlight bash %}
+[<*>]  ~  mkdir my/bin/folder
+mkdir: cannot create directory 'my/bin/folder' : No such file or directory
+
+[<*>]  ~  mkdir -p my/bin/folder
+[<*>]  ~  tree -d -L 3
+.
+├── bar
+├── bar1
+├── foo
+├── foo1
+├── my
+│   └── bin
+│       └── folder
+{% endhighlight %}
 
 ### echo
+The echo command takes its arguments and prints them to standard output. By default this is the terminal itself but can also redirect in to files and other commands
 
+{% highlight bash %}
+[<*>]  ~  echo "I am a thing"
+I am a thing
+
+[<*>]  ~  echo "So am I" > testfile
+[<*>]  ~  cat testfile
+So am I
+
+[<*>]  ~  echo `whoami`
+ryan
+
+[<*>]  ~  echo $(ping -c3 -q google.com)
+PING google.com (74.125.227.164) 56(84) bytes of data. --- google.com ping statistics --- 3 packets transmitted, 3 received, 0% packet loss, time 2002ms rtt min/avg/max/mdev = 5.332/5.374/5.454/0.101 ms
+{% endhighlight %}
 
 ### cat
+
+{% highlight bash %}
+
+{% endhighlight %}
 
 
 ### mv
 
+{% highlight bash %}
+
+{% endhighlight %}
+
+
 
 ### cp
 
+{% highlight bash %}
+
+{% endhighlight %}
+
 
 ### rm
+
+{% highlight bash %}
+
+{% endhighlight %}
 
 
 
 ### man
 
+{% highlight bash %}
+
+{% endhighlight %}
+
 
 ### less
 
+{% highlight bash %}
 
-### more
+{% endhighlight %}
+
 
 
 ### head
