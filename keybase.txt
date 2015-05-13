@@ -1,0 +1,67 @@
+==================================================================
+https://keybase.io/greyhoundforty
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of http://tinybot.io
+  * I am greyhoundforty (https://keybase.io/greyhoundforty) on keybase.
+  * I have a public key with fingerprint E5EE E24A 08B8 8989 A0D8  6650 54E4 10FF 4EB2 04EB
+
+To do so, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "e5eee24a08b88989a0d8665054e410ff4eb204eb",
+            "host": "keybase.io",
+            "key_id": "54e410ff4eb204eb",
+            "kid": "0101d7251eef437b6fd0f289d8c90a7170faa2fa2f422f766abcf27a3b1416011f880a",
+            "uid": "901c3596434eedd9dd93b080dec59019",
+            "username": "greyhoundforty"
+        },
+        "service": {
+            "hostname": "tinybot.io",
+            "protocol": "http:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1431527195,
+    "expire_in": 157680000,
+    "prev": "0f0442a3f91898c84896226e0ba801725e0e332e9da7edd56ee91316c004a45f",
+    "seqno": 21,
+    "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.8
+Comment: https://keybase.io/crypto
+
+yMIfAnicbVJbaBNBFE2MWtxarSKiRj9cfwSjzsy+gxKkFhH0xwdYbAn7mE2X2t10
+s0mNscUPtSEGn6Cg+KriW5EqCKLW1PrRl5VSWjCliFoRFakaxQc+Zqv+OVxmmHvP
+PTPncNtLfB7K6++flurM1+rerlx53LNxfdifohVLS9LBFF2Dxw7dMCPYjtqG6dBB
+GnMYY8TKQFREURIlGWgiz3OAYzELga6zWEGAbHSArrZibgehUeQYXmJYJEcuYUMj
+2f/ga8YKAAKoCYiDGOssIyi8rgEdiZImqhKQBSgAXZaRToJFSBd4XlZUHQkyo0AW
+8gBCXRSBTOjiY3QSgCrDSTzLsBhrmkSCUYAINKxypCa5wBi2TbkWE3TExslqK25q
+umU7SbohQJNawlCxa4Sr5y/OMcykYjl/NEVty7FUawvJVztONOi2Ocmoi6vHSvgv
+Q1gxTI1YSRoS2I4ZlkkHIUGqjuFSQpaBHBKgxAVovDVq2DhsuAhO4EVAlvsMTrj+
+6IBlkczoEiT+qyIrSjxCPAaKLAJIjMMAMwzCkiYLRDDHYyxBBvIqAKzMcjrtaqoz
+LTqIIPmnHCGcMSNiyk7cxnRD2/3K8R4v5Zk4YZw7DR5qUum/GZnWUfSjFGZ2Sd0V
+M8589M05XL891d/cUli4k9rW/qC8de9G4VnZmoeZvoGOr+2hmvRFswllP38a7D76
+E9+sKHeOU8VH9g/5bsOqG5Rvc+H18Dj6w7u5F7/FW18O8L0994+l0dWyKd2d2Slt
+w+u2IWr/0LO6mxZVPLn0euLA8lG8ela+sisbeXgye7oQmtiTuLV6z+5Q4JE3c/7c
+odkj+xZ5Z77ce3fTspK+a9EJqcu/TqW/NI1uOnii7UE+/ebcSPHghtzT6c0LboTm
+Ry7lnjfWn/2e3/fkLVNReLznysr3L+5VmatyS5tvBy4U9bY89x9p3BFsXEF9z7xa
+Lv1Mt/9YPPWOf97akt9YWzA3
+=07Cy
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/greyhoundforty
+
+==================================================================
